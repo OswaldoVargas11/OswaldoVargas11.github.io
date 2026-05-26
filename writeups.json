@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Ejemplo: HTB - Active Directory Lab",
+    "title_en": "Example: HTB - Active Directory Lab",
+    "platform": "Hack The Box",
+    "category": "Active Directory",
+    "category_en": "Active Directory",
+    "difficulty": "Medium",
+    "date": "2026-06-01",
+    "tags": ["Kerberoasting", "BloodHound", "Lateral Movement"],
+    "summary": "Compromiso de un dominio mediante Kerberoasting de una cuenta de servicio, abuso de ACLs y movimiento lateral con pass-the-ticket hasta DA.",
+    "summary_en": "Domain compromise through Kerberoasting a service account, abusing ACLs, and lateral movement with pass-the-ticket up to DA.",
+    "url": "https://github.com/tu-usuario/writeups/active-directory-lab.md"
+  },
+  {
+    "title": "Ejemplo: TryHackMe - Web Exploitation Chain",
+    "title_en": "Example: TryHackMe - Web Exploitation Chain",
+    "platform": "TryHackMe",
+    "category": "Web",
+    "category_en": "Web",
+    "difficulty": "Hard",
+    "date": "2026-05-15",
+    "tags": ["SSTI", "RCE", "Privilege Escalation"],
+    "summary": "Encadenamiento de una fuga de informacion con Server-Side Template Injection para lograr ejecucion remota de codigo y posterior escalada de privilegios en Linux.",
+    "summary_en": "Chaining an information leak with Server-Side Template Injection to achieve remote code execution and later privilege escalation on Linux.",
+    "url": "https://github.com/tu-usuario/writeups/web-chain.md"
+  }
+]

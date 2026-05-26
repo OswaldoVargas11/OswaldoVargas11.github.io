@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oswaldo Vargas Rodríguez — Detection Engineer & Offensive Security</title>
+<meta name="description" content="Portfolio de Oswaldo Vargas Rodríguez — Detection Engineering, SOC/SIEM, Incident Response y seguridad ofensiva.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#13131c;
+  --bg-soft:#1a1a26;
+  --panel:#1e1e2d;
+  --panel-hi:#262638;
+  --line:#2e2e42;
+  --text:#f0eef6;
+  --muted:#a8a4be;
+  --dim:#6f6b87;
+  --lav:#c5b8ff;
+  --mint:#9be8d8;
+  --peach:#ffc9a8;
+  --rose:#f6b8d0;
+  --sky:#a8d4ff;
+  --r:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Schibsted Grotesk',sans-serif;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+::selection{background:var(--lav);color:#13131c}
+
+/* ── BOOT SCREEN ── */
+#boot{position:fixed;inset:0;z-index:10000;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .6s ease,visibility .6s}
+#boot.done{opacity:0;visibility:hidden}
+.boot-term{width:min(560px,86vw);font-family:'JetBrains Mono',monospace;
+  font-size:0.86rem;line-height:1.9}
+.boot-line{color:var(--muted);white-space:pre-wrap;opacity:0}
+.boot-line .ok{color:var(--mint)}
+.boot-line .warn{color:var(--peach)}
+.boot-line .accent{color:var(--lav)}
+.boot-bar{margin-top:14px;height:4px;background:var(--panel);border-radius:3px;
+  overflow:hidden;opacity:0}
+.boot-bar i{display:block;height:100%;width:0;
+  background:linear-gradient(90deg,var(--lav),var(--mint))}
+
+/* ── MATRIX RAIN CANVAS ── */
+#matrix{position:fixed;inset:0;z-index:-3;opacity:0.06;pointer-events:none}
+
+/* ── BACKGROUND ── */
+.bg-mesh{position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(circle at 18% 12%,rgba(197,184,255,0.16),transparent 42%),
+    radial-gradient(circle at 82% 28%,rgba(155,232,216,0.13),transparent 45%),
+    radial-gradient(circle at 50% 88%,rgba(255,201,168,0.1),transparent 48%);}
+.bg-scan{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.4;
+  background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,
+    rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px)}
+.bg-noise{position:fixed;inset:0;z-index:-1;opacity:0.025;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+section{padding:120px 0;position:relative}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  backdrop-filter:blur(16px);background:rgba(19,19,28,0.7);
+  border-bottom:1px solid transparent;transition:border-color .3s}
+nav.scrolled{border-bottom-color:var(--line)}
+.nav-inner{max-width:1120px;margin:0 auto;padding:18px 32px;
+  display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.15rem;
+  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:9px}
+.logo .badge{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,var(--lav),var(--mint));
+  display:flex;align-items:center;justify-content:center;
+  color:#13131c;font-weight:700;font-size:0.85rem;font-family:'JetBrains Mono',monospace}
+.nav-links{display:flex;gap:34px;list-style:none}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:0.92rem;
+  font-weight:500;transition:color .2s;position:relative}
+.nav-links a:hover{color:var(--text)}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-5px;height:2px;
+  width:0;background:linear-gradient(90deg,var(--lav),var(--mint));transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:14px}
+.lang-switch{font-family:'JetBrains Mono',monospace;font-size:0.76rem;
+  background:var(--panel);border:1px solid var(--line);color:var(--text);
+  padding:8px 12px;border-radius:9px;cursor:pointer;transition:all .25s}
+.lang-switch:hover{border-color:var(--lav);transform:translateY(-2px)}
+.nav-toggle{display:none;background:none;border:none;color:var(--text);
+  font-size:1.6rem;cursor:pointer}
+
+/* ── HACKER STATUS BAR ── */
+.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:rgba(19,19,28,0.92);backdrop-filter:blur(10px);
+  border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;color:var(--dim);padding:7px 0}
+.statusbar .sb-inner{max-width:1120px;margin:0 auto;padding:0 32px;
+  display:flex;justify-content:space-between;align-items:center;gap:20px}
+.statusbar .sb-left{display:flex;gap:22px;align-items:center}
+.sb-item{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.sb-led{width:7px;height:7px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 8px var(--mint);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.sb-val{color:var(--mint)}
+.sb-right{color:var(--lav)}
+@media(max-width:700px){.statusbar .sb-left .sb-item:nth-child(n+3){display:none}}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 100px}
+.hero-inner{width:100%}
+.pill{display:inline-flex;align-items:center;gap:9px;
+  font-family:'JetBrains Mono',monospace;font-size:0.76rem;
+  background:var(--panel);border:1px solid var(--line);
+  padding:8px 16px;border-radius:100px;color:var(--muted);margin-bottom:32px}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);
+  box-shadow:0 0 12px var(--mint);animation:blink 2.4s infinite}
+.hero h1{font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:clamp(2.8rem,7vw,5.4rem);line-height:1.02;letter-spacing:-2.5px;
+  margin-bottom:26px}
+.hero h1 .grad{background:linear-gradient(115deg,var(--lav) 0%,var(--rose) 45%,var(--peach) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+/* glitch on hover */
+.glitch{position:relative;display:inline-block}
+.glitch:hover::before,.glitch:hover::after{
+  content:attr(data-text);position:absolute;left:0;top:0;width:100%;
+  background:var(--bg);overflow:hidden}
+.glitch:hover::before{color:var(--mint);animation:gl1 .4s infinite linear alternate-reverse;
+  clip-path:polygon(0 0,100% 0,100% 45%,0 45%)}
+.glitch:hover::after{color:var(--rose);animation:gl2 .4s infinite linear alternate-reverse;
+  clip-path:polygon(0 60%,100% 60%,100% 100%,0 100%)}
+@keyframes gl1{0%{transform:translate(0)}100%{transform:translate(-3px,-2px)}}
+@keyframes gl2{0%{transform:translate(0)}100%{transform:translate(3px,2px)}}
+.hero .role{font-family:'JetBrains Mono',monospace;color:var(--mint);
+  font-size:clamp(0.9rem,1.8vw,1.1rem);margin-bottom:26px;min-height:1.6em}
+.hero .role .caret{display:inline-block;width:9px;height:1.05em;
+  background:var(--mint);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+.hero p.lead{color:var(--muted);max-width:600px;font-size:1.1rem;margin-bottom:40px}
+.cta-row{display:flex;gap:16px;flex-wrap:wrap}
+.btn{font-weight:500;font-size:0.97rem;padding:15px 28px;border-radius:12px;
+  text-decoration:none;display:inline-flex;align-items:center;gap:9px;
+  transition:all .25s;border:none;cursor:pointer}
+.btn-primary{background:linear-gradient(120deg,var(--lav),var(--mint));color:#13131c;
+  font-weight:700}
+.btn-primary:hover{transform:translateY(-4px) scale(1.02);
+  box-shadow:0 16px 38px rgba(197,184,255,0.28)}
+.btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--line)}
+.btn-ghost:hover{border-color:var(--lav);transform:translateY(-4px)}
+
+/* ── TERMINAL CARD (hero visual) ── */
+.term{margin-top:60px;background:#0e0e16;border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;max-width:560px;
+  box-shadow:0 24px 60px rgba(0,0,0,0.5);font-family:'JetBrains Mono',monospace}
+.term-head{display:flex;align-items:center;gap:8px;padding:11px 16px;
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.term-dot{width:11px;height:11px;border-radius:50%}
+.td-r{background:#f6627a}.td-y{background:var(--peach)}.td-g{background:var(--mint)}
+.term-title{margin-left:8px;font-size:0.74rem;color:var(--dim)}
+.term-body{padding:18px 18px 20px;font-size:0.82rem;line-height:1.85}
+.term-body .ln{color:var(--muted);opacity:0}
+.term-body .pr{color:var(--lav)}
+.term-body .ok{color:var(--mint)}
+.term-body .wn{color:var(--peach)}
+.term-body .out{color:var(--text)}
+
+/* ── SECTION HEAD ── */
+.sec-head{margin-bottom:60px;max-width:620px}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+  color:var(--lav);display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.sec-tag::before{content:'';width:28px;height:1px;background:var(--lav)}
+.sec-head h2{font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:clamp(2rem,4.5vw,3rem);letter-spacing:-1.2px}
+.sec-head p{color:var(--muted);margin-top:12px}
+
+/* ── REVEAL ── */
+.zoom-reveal{opacity:0;transform:scale(0.82) translateY(40px);
+  transition:opacity .8s cubic-bezier(.16,1,.3,1),transform .8s cubic-bezier(.16,1,.3,1)}
+.zoom-reveal.in{opacity:1;transform:scale(1) translateY(0)}
+.fade-up{opacity:0;transform:translateY(34px);
+  transition:opacity .7s ease,transform .7s ease}
+.fade-up.in{opacity:1;transform:translateY(0)}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:54px;align-items:start}
+.about-text p{color:var(--muted);margin-bottom:18px;font-size:1.04rem}
+.about-text strong{color:var(--text);font-weight:700}
+.id-card{background:#0e0e16;border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;font-family:'JetBrains Mono',monospace}
+.id-head{display:flex;align-items:center;gap:8px;padding:11px 16px;
+  background:var(--panel);border-bottom:1px solid var(--line)}
+.id-head .term-title{margin-left:8px}
+.id-body{padding:22px 24px}
+.id-prompt{color:var(--lav);font-size:0.8rem;margin-bottom:14px}
+.id-prompt .cmd{color:var(--text)}
+.id-row{display:flex;justify-content:space-between;padding:9px 0;
+  border-bottom:1px solid var(--line);font-size:0.82rem}
+.id-row:last-child{border-bottom:none}
+.id-row .k{color:var(--dim)}
+.id-row .v{color:var(--mint)}
+
+/* ── STATS ── */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:30px 22px;text-align:center;transition:all .3s}
+.stat:hover{transform:translateY(-6px);border-color:var(--lav);background:var(--panel-hi)}
+.stat .num{font-family:'Clash Display',sans-serif;font-size:2.6rem;font-weight:700;
+  background:linear-gradient(135deg,var(--lav),var(--mint));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.stat .lbl{color:var(--muted);font-size:0.84rem;margin-top:6px}
+
+/* ── SKILLS ── */
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.skill-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:32px;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;
+  position:relative;overflow:hidden}
+.skill-card .glow{position:absolute;width:200px;height:200px;border-radius:50%;
+  filter:blur(70px);opacity:0;transition:opacity .4s;pointer-events:none;
+  top:-40px;right:-40px}
+.skill-card:hover{transform:translateY(-8px);border-color:var(--lav);
+  box-shadow:0 22px 50px rgba(0,0,0,0.45)}
+.skill-card:hover .glow{opacity:0.5}
+.sk-icon{width:48px;height:48px;border-radius:13px;display:flex;
+  align-items:center;justify-content:center;margin-bottom:18px;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.1rem;color:#13131c}
+.skill-card h3{font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:1.2rem;margin-bottom:9px}
+.skill-card p{color:var(--muted);font-size:0.94rem;margin-bottom:18px}
+.tags{display:flex;flex-wrap:wrap;gap:8px}
+.tag{font-family:'JetBrains Mono',monospace;font-size:0.74rem;
+  background:var(--panel-hi);border:1px solid var(--line);
+  padding:6px 12px;border-radius:7px;color:var(--muted);transition:all .2s}
+.skill-card:hover .tag{border-color:rgba(197,184,255,0.3)}
+
+/* ── TIMELINE ── */
+.timeline{position:relative;padding-left:38px}
+.timeline::before{content:'';position:absolute;left:8px;top:8px;bottom:8px;width:2px;
+  background:linear-gradient(var(--lav),var(--mint),transparent)}
+.tl-item{position:relative;margin-bottom:44px}
+.tl-item:last-child{margin-bottom:0}
+.tl-item::before{content:'';position:absolute;left:-38px;top:4px;width:18px;height:18px;
+  border-radius:50%;background:var(--bg);border:3px solid var(--lav);
+  transition:transform .3s,border-color .3s}
+.tl-item:hover::before{transform:scale(1.3);border-color:var(--mint)}
+.tl-date{font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+  color:var(--mint);margin-bottom:5px}
+.tl-item h3{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.2rem}
+.tl-item .org{color:var(--lav);font-size:0.92rem;margin-bottom:10px;
+  font-family:'JetBrains Mono',monospace}
+.tl-item p{color:var(--muted);font-size:0.95rem}
+
+/* ── ROADMAP ── */
+.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.cert{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:26px;transition:all .35s cubic-bezier(.16,1,.3,1);position:relative}
+.cert:hover{transform:translateY(-8px) scale(1.03);border-color:var(--lav)}
+.cert .ph{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--dim)}
+.cert h4{font-family:'Clash Display',sans-serif;font-weight:700;font-size:1.4rem;
+  margin:8px 0 4px}
+.cert .cn{font-size:0.8rem;color:var(--muted);margin-bottom:14px}
+.cert .badge{font-family:'JetBrains Mono',monospace;font-size:0.66rem;
+  padding:5px 10px;border-radius:6px;display:inline-block}
+.b-prog{background:rgba(255,201,168,0.14);color:var(--peach);
+  border:1px solid rgba(255,201,168,0.32)}
+.b-plan{background:rgba(168,164,190,0.1);color:var(--muted);border:1px solid var(--line)}
+.cert-connector{position:absolute;right:-12px;top:50%;color:var(--dim);
+  font-size:0.9rem;z-index:2}
+
+/* ── WRITEUPS ── */
+.wu-controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:34px}
+.filter-btn{font-family:'JetBrains Mono',monospace;font-size:0.8rem;
+  background:var(--panel);border:1px solid var(--line);color:var(--muted);
+  padding:9px 17px;border-radius:9px;cursor:pointer;transition:all .25s}
+.filter-btn:hover{color:var(--text);border-color:var(--lav)}
+.filter-btn.active{background:linear-gradient(120deg,var(--lav),var(--mint));
+  color:#13131c;border-color:transparent;font-weight:700}
+.wu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.wu-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:28px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;
+  transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;
+  position:relative;overflow:hidden}
+.wu-card::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 60%,rgba(197,184,255,0.06));
+  opacity:0;transition:opacity .4s}
+.wu-card:hover{transform:translateY(-10px) scale(1.02);border-color:var(--lav);
+  box-shadow:0 26px 56px rgba(0,0,0,0.5)}
+.wu-card:hover::after{opacity:1}
+.wu-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.wu-platform{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--mint)}
+.wu-diff{font-family:'JetBrains Mono',monospace;font-size:0.68rem;
+  padding:4px 10px;border-radius:6px}
+.d-easy{background:rgba(155,232,216,0.14);color:var(--mint)}
+.d-medium{background:rgba(255,201,168,0.14);color:var(--peach)}
+.d-hard{background:rgba(246,184,208,0.16);color:var(--rose)}
+.d-insane{background:rgba(197,184,255,0.16);color:var(--lav)}
+.wu-card h3{font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:1.18rem;margin-bottom:6px}
+.wu-meta{font-family:'JetBrains Mono',monospace;font-size:0.74rem;
+  color:var(--dim);margin-bottom:14px}
+.wu-card p{color:var(--muted);font-size:0.92rem;flex-grow:1;margin-bottom:16px}
+.wu-tags{display:flex;flex-wrap:wrap;gap:7px}
+.wu-arrow{margin-top:16px;font-family:'JetBrains Mono',monospace;
+  font-size:0.82rem;color:var(--lav);display:flex;align-items:center;gap:7px;
+  transition:gap .3s}
+.wu-card:hover .wu-arrow{gap:13px}
+.wu-empty{grid-column:1/-1;text-align:center;padding:64px 20px;color:var(--dim);
+  font-family:'JetBrains Mono',monospace;border:1px dashed var(--line);
+  border-radius:var(--r)}
+.wu-note{margin-top:26px;font-size:0.84rem;color:var(--dim);
+  font-family:'JetBrains Mono',monospace;background:var(--bg-soft);
+  border:1px solid var(--line);padding:15px 20px;border-radius:12px}
+.wu-note code{color:var(--lav)}
+
+/* ── CONTACT ── */
+.contact{text-align:center}
+.contact .big{font-family:'Clash Display',sans-serif;font-weight:600;
+  font-size:clamp(2.2rem,6vw,4rem);letter-spacing:-1.5px;margin-bottom:16px}
+.contact .big .grad{background:linear-gradient(115deg,var(--lav),var(--peach));
+  -webkit-background-clip:text;background-clip:text;color:transparent}
+.contact .ctline{font-family:'JetBrains Mono',monospace;color:var(--mint);
+  font-size:0.9rem;margin-bottom:30px;min-height:1.4em}
+.contact .ctline .caret{display:inline-block;width:8px;height:1em;
+  background:var(--mint);margin-left:2px;vertical-align:-1px;
+  animation:blink 1s steps(1) infinite}
+.contact-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+
+/* ── FOOTER ── */
+footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
+  color:var(--dim);font-family:'JetBrains Mono',monospace;font-size:0.8rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:880px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;
+    flex-direction:column;background:var(--bg-soft);
+    border-bottom:1px solid var(--line);padding:22px 32px;gap:20px}
+  .nav-links.open{display:flex}
+  .nav-actions{gap:10px}
+  .nav-toggle{display:block}
+  .about-grid{grid-template-columns:1fr}
+  .skills-grid,.wu-grid{grid-template-columns:1fr}
+  .stats,.roadmap{grid-template-columns:repeat(2,1fr)}
+  .cert-connector{display:none}
+  section{padding:80px 0}
+}
+</style>
+</head>
+<body>
+
+<!-- BOOT SCREEN -->
+<div id="boot">
+  <div class="boot-term" id="bootTerm">
+    <div class="boot-line" data-txt="[ ok ] initializing portfolio.sys ......... <span class='ok'>DONE</span>"></div>
+    <div class="boot-line" data-txt="[ ok ] loading profile :: oswaldo_vargas ... <span class='ok'>DONE</span>"></div>
+    <div class="boot-line" data-txt="[ ok ] mounting /detection_engineering ..... <span class='ok'>DONE</span>"></div>
+    <div class="boot-line" data-txt="[ <span class='warn'>**</span> ] establishing offensive_path ........ <span class='accent'>ACTIVE</span>"></div>
+    <div class="boot-line" data-txt="[ ok ] decrypting interface ............... <span class='ok'>DONE</span>"></div>
+    <div class="boot-bar"><i></i></div>
+  </div>
+</div>
+
+<canvas id="matrix"></canvas>
+<div class="bg-mesh"></div>
+<div class="bg-scan"></div>
+<div class="bg-noise"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo"><span class="badge">OV</span>Oswaldo Vargas</a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">Sobre mí</a></li>
+      <li><a href="#skills">Capacidades</a></li>
+      <li><a href="#experience">Trayectoria</a></li>
+      <li><a href="#roadmap">Certificaciones</a></li>
+      <li><a href="#writeups">Writeups</a></li>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+    <div class="nav-actions">
+      <button class="lang-switch" id="langSwitch" type="button" aria-label="Switch language">EN</button>
+      <button class="nav-toggle" id="navToggle" aria-label="Menú">≡</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap hero-inner">
+    <div class="pill fade-up"><span class="dot"></span> Disponible para nuevos retos · Madrid, España</div>
+    <h1 class="fade-up">
+      <span class="glitch decrypt" data-text="Detección de amenazas." data-final="Detección de amenazas.">Detección de amenazas.</span><br>
+      <span class="grad glitch decrypt" data-text="Mentalidad ofensiva." data-final="Mentalidad ofensiva.">Mentalidad ofensiva.</span>
+    </h1>
+    <div class="role fade-up" id="roleType"><span class="caret"></span></div>
+    <p class="lead fade-up">
+      Construyo detecciones porque entiendo cómo se ataca; entiendo cómo se ataca
+      para construir mejores detecciones. Ingeniero de ciberseguridad en transición
+      hacia la seguridad ofensiva.
+    </p>
+    <div class="cta-row fade-up">
+      <a href="#writeups" class="btn btn-primary">Ver writeups CTF →</a>
+      <a href="#contact" class="btn btn-ghost">Contactar</a>
+    </div>
+    <div class="term fade-up">
+      <div class="term-head">
+        <span class="term-dot td-r"></span><span class="term-dot td-y"></span><span class="term-dot td-g"></span>
+        <span class="term-title">oswaldo@ovr-portfolio: ~/whoami</span>
+      </div>
+      <div class="term-body" id="termBody">
+        <div class="ln"><span class="pr">$</span> whoami</div>
+        <div class="ln"><span class="out">oswaldo_vargas :: cybersecurity_consultant</span></div>
+        <div class="ln"><span class="pr">$</span> cat focus.txt</div>
+        <div class="ln"><span class="out">detection_engineering · soc_siem · incident_response</span></div>
+        <div class="ln"><span class="pr">$</span> ./status --offensive</div>
+        <div class="ln"><span class="wn">[*]</span> <span class="out">red_team_path ......... </span><span class="ok">IN_PROGRESS</span></div>
+        <div class="ln"><span class="pr">$</span> <span class="caret" style="background:var(--lav)"></span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">01 — sobre mí</span>
+      <h2>Perfil profesional</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="fade-up">
+          Soy <strong>Oswaldo Vargas Rodríguez</strong>, ingeniero de ciberseguridad
+          con base en Madrid. Ingeniero de Telecomunicaciones reconvertido a seguridad,
+          con experiencia práctica en <strong>detection engineering, operaciones SOC/SIEM
+          e incident response</strong> en entornos enterprise.
+        </p>
+        <p class="fade-up">
+          Mi trabajo combina el diseño y tuning de casos de uso de detección sobre Splunk,
+          la investigación de alertas e incidentes, el análisis crítico de logs multi-fuente
+          y la arquitectura defensiva — anclado en <strong>MITRE ATT&amp;CK</strong>.
+        </p>
+        <p class="fade-up">
+          Mi objetivo es claro: evolucionar hacia el <strong>red teaming</strong>. Un
+          detection engineer que sabe atacar construye detecciones que un atacante real
+          no puede evadir. Este portfolio documenta ese camino.
+        </p>
+      </div>
+      <div class="id-card zoom-reveal">
+        <div class="id-head">
+          <span class="term-dot td-r"></span><span class="term-dot td-y"></span><span class="term-dot td-g"></span>
+          <span class="term-title">id_card.json</span>
+        </div>
+        <div class="id-body">
+          <div class="id-prompt">$ <span class="cmd">cat profile --identity</span></div>
+          <div class="id-row"><span class="k">name</span><span class="v">Oswaldo Vargas R.</span></div>
+          <div class="id-row"><span class="k">location</span><span class="v">Madrid, ES</span></div>
+          <div class="id-row"><span class="k">role</span><span class="v">cybersec_consultant</span></div>
+          <div class="id-row"><span class="k">focus</span><span class="v">detection_eng / IR</span></div>
+          <div class="id-row"><span class="k">framework</span><span class="v">MITRE ATT&amp;CK</span></div>
+          <div class="id-row"><span class="k">langs</span><span class="v">ES · EN_C1</span></div>
+          <div class="id-row"><span class="k">target</span><span class="v">red_team</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="stats" style="margin-top:54px">
+      <div class="stat zoom-reveal"><div class="num" data-count="2" data-suffix="+">0</div><div class="lbl">Años en ciberseguridad</div></div>
+      <div class="stat zoom-reveal"><div class="num" data-count="60" data-suffix="+">0</div><div class="lbl">Casos de detección</div></div>
+      <div class="stat zoom-reveal"><div class="num" data-count="5" data-suffix="+">0</div><div class="lbl">Certificaciones</div></div>
+      <div class="stat zoom-reveal"><div class="num" data-text="MSc">0</div><div class="lbl">Máster Ciberseguridad</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">02 — capacidades</span>
+      <h2>Áreas técnicas</h2>
+      <p>Donde aporto valor hoy y donde construyo profundidad.</p>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card zoom-reveal">
+        <div class="glow" style="background:var(--lav)"></div>
+        <div class="sk-icon" style="background:linear-gradient(135deg,var(--lav),var(--sky))">01</div>
+        <h3>SIEM &amp; Detection Engineering</h3>
+        <p>Ciclo de vida completo de casos de uso: de la lógica SPL al mapeo MITRE y la promoción a producción.</p>
+        <div class="tags">
+          <span class="tag">Splunk</span><span class="tag">SPL</span>
+          <span class="tag">Detection-as-Code</span><span class="tag">MITRE ATT&amp;CK</span>
+        </div>
+      </div>
+      <div class="skill-card zoom-reveal">
+        <div class="glow" style="background:var(--mint)"></div>
+        <div class="sk-icon" style="background:linear-gradient(135deg,var(--mint),var(--sky))">02</div>
+        <h3>Incident Response &amp; Threat Analysis</h3>
+        <p>Triage e investigación de alertas, análisis de causa raíz, reconstrucción de timeline y mapeo de TTPs.</p>
+        <div class="tags">
+          <span class="tag">Cortex XDR</span><span class="tag">Triage</span>
+          <span class="tag">Log forensics</span><span class="tag">IoC analysis</span>
+        </div>
+      </div>
+      <div class="skill-card zoom-reveal">
+        <div class="glow" style="background:var(--peach)"></div>
+        <div class="sk-icon" style="background:linear-gradient(135deg,var(--peach),var(--rose))">03</div>
+        <h3>Seguridad Ofensiva</h3>
+        <p>En desarrollo activo: explotación, post-explotación, ataques a Active Directory, evasión de EDR.</p>
+        <div class="tags">
+          <span class="tag">Active Directory</span><span class="tag">Privilege Esc.</span>
+          <span class="tag">C2 frameworks</span><span class="tag">OPSEC</span>
+        </div>
+      </div>
+      <div class="skill-card zoom-reveal">
+        <div class="glow" style="background:var(--rose)"></div>
+        <div class="sk-icon" style="background:linear-gradient(135deg,var(--rose),var(--lav))">04</div>
+        <h3>Arquitectura &amp; Automatización</h3>
+        <p>Defense-in-depth, microsegmentación, Zero Trust y automatización de workflows con Python.</p>
+        <div class="tags">
+          <span class="tag">Python</span><span class="tag">Docker</span>
+          <span class="tag">ZTNA</span><span class="tag">AWS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">03 — trayectoria</span>
+      <h2>Experiencia</h2>
+    </div>
+    <div class="timeline">
+      <div class="tl-item fade-up">
+        <div class="tl-date">Jul 2025 — Presente</div>
+        <h3>Cybersecurity Consultant</h3>
+        <div class="org">Audea Seguridad de la Información</div>
+        <p>Detection engineering sobre SIEM, threat detection, triage e investigación de incidentes, automatización de workflows de seguridad y arquitectura defensiva en entornos enterprise.</p>
+      </div>
+      <div class="tl-item fade-up">
+        <div class="tl-date">Jul 2024 — Jun 2025</div>
+        <h3>L2/L3 Analyst — Regional Information Security Office</h3>
+        <div class="org">Amadeus</div>
+        <p>Soporte L2/L3 en entornos SASE/SSE, iniciativas ZTNA, triage de alertas DLP y de acceso, y apoyo a incident response sobre seguridad perimetral.</p>
+      </div>
+      <div class="tl-item fade-up">
+        <div class="tl-date">2024 — 2025</div>
+        <h3>Máster en Ciberseguridad</h3>
+        <div class="org">IMF Business School / Deloitte / UCAV</div>
+        <p>Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes y arquitectura de seguridad.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section id="roadmap">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">04 — certificaciones</span>
+      <h2>Ruta de certificación</h2>
+      <p>Progresión desde la base defensiva hacia el red teaming.</p>
+    </div>
+    <div class="roadmap">
+      <div class="cert zoom-reveal">
+        <div class="ph">FASE 01</div><h4>Splunk PU</h4>
+        <div class="cn">Core Certified Power User</div>
+        <span class="badge b-prog">EN CURSO</span>
+        <span class="cert-connector">→</span>
+      </div>
+      <div class="cert zoom-reveal">
+        <div class="ph">FASE 02</div><h4>CPTS</h4>
+        <div class="cn">HTB Penetration Testing Specialist</div>
+        <span class="badge b-plan">PLANIFICADO</span>
+        <span class="cert-connector">→</span>
+      </div>
+      <div class="cert zoom-reveal">
+        <div class="ph">FASE 03</div><h4>OSCP</h4>
+        <div class="cn">OffSec Certified Professional</div>
+        <span class="badge b-plan">PLANIFICADO</span>
+        <span class="cert-connector">→</span>
+      </div>
+      <div class="cert zoom-reveal">
+        <div class="ph">FASE 04</div><h4>CRTO</h4>
+        <div class="cn">Certified Red Team Operator</div>
+        <span class="badge b-plan">OBJETIVO</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WRITEUPS -->
+<section id="writeups">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">05 — laboratorio</span>
+      <h2>Writeups CTF</h2>
+      <p>Resoluciones documentadas de retos de Hack The Box, TryHackMe y competiciones CTF.</p>
+    </div>
+    <div class="wu-controls fade-up" id="wuFilters"></div>
+    <div class="wu-grid" id="wuGrid"></div>
+    <div class="wu-note fade-up">
+      &gt; Para añadir un writeup: edita <code>writeups.json</code> y añade una entrada. La web lo carga automáticamente.
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="fade-up">
+      <span class="sec-tag" style="justify-content:center">06 — contacto</span>
+      <div class="big">Trabajemos <span class="grad">juntos</span></div>
+      <div class="ctline" id="ctType"><span class="caret"></span></div>
+      <div class="contact-links">
+        <a href="https://www.linkedin.com/in/oswaldo-vargas-rodr%C3%ADguez-979293224/" target="_blank" rel="noopener" class="btn btn-primary">in LinkedIn</a>
+        <a href="https://github.com/OswaldoVargas11" target="_blank" rel="noopener" class="btn btn-ghost">⌥ GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">&gt; designed &amp; built by Oswaldo Vargas Rodríguez · <span id="year"></span></div>
+</footer>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <div class="sb-inner">
+    <div class="sb-left">
+      <div class="sb-item"><span class="sb-led"></span> SYSTEM <span class="sb-val">ONLINE</span></div>
+      <div class="sb-item">SESSION <span class="sb-val" id="sbTime">--:--:--</span></div>
+      <div class="sb-item">MODE <span class="sb-val">DEFENSIVE→OFFENSIVE</span></div>
+      <div class="sb-item">LOC <span class="sb-val">MADRID·ES</span></div>
+    </div>
+    <div class="sb-right" id="sbHash">0x00000000</div>
+  </div>
+</div>
+
+<script>
+const i18n={
+  es:{
+    htmlLang:'es',
+    switchLabel:'EN',
+    title:'Oswaldo Vargas Rodríguez — Detection Engineer & Offensive Security',
+    description:'Portfolio de Oswaldo Vargas Rodríguez — Detection Engineering, SOC/SIEM, Incident Response y seguridad ofensiva.',
+    role:'> Detection Engineer · SOC/SIEM · Incident Response · Red Team in progress',
+    contactType:'$ ./contact --connect :: detection_eng · soc_siem · offensive_security',
+    selectors:{
+      '.nav-links li:nth-child(1) a':'Sobre mí',
+      '.nav-links li:nth-child(2) a':'Capacidades',
+      '.nav-links li:nth-child(3) a':'Trayectoria',
+      '.nav-links li:nth-child(4) a':'Certificaciones',
+      '.nav-links li:nth-child(5) a':'Writeups',
+      '.nav-links li:nth-child(6) a':'Contacto',
+      '.pill':'<span class="dot"></span> Disponible para nuevos retos · Madrid, España',
+      '.hero h1 .decrypt:nth-child(1)':'Detección de amenazas.',
+      '.hero h1 .decrypt:nth-child(3)':'Mentalidad ofensiva.',
+      '.hero .lead':'Construyo detecciones porque entiendo cómo se ataca; entiendo cómo se ataca para construir mejores detecciones. Ingeniero de ciberseguridad en transición hacia la seguridad ofensiva.',
+      '.cta-row .btn-primary':'Ver writeups CTF →',
+      '.cta-row .btn-ghost':'Contactar',
+      '#about .sec-tag':'01 — sobre mí',
+      '#about h2':'Perfil profesional',
+      '.about-text p:nth-child(1)':'Soy <strong>Oswaldo Vargas Rodríguez</strong>, ingeniero de ciberseguridad con base en Madrid. Ingeniero de Telecomunicaciones reconvertido a seguridad, con experiencia práctica en <strong>detection engineering, operaciones SOC/SIEM e incident response</strong> en entornos enterprise.',
+      '.about-text p:nth-child(2)':'Mi trabajo combina el diseño y tuning de casos de uso de detección sobre Splunk, la investigación de alertas e incidentes, el análisis crítico de logs multi-fuente y la arquitectura defensiva — anclado en <strong>MITRE ATT&CK</strong>.',
+      '.about-text p:nth-child(3)':'Mi objetivo es claro: evolucionar hacia el <strong>red teaming</strong>. Un detection engineer que sabe atacar construye detecciones que un atacante real no puede evadir. Este portfolio documenta ese camino.',
+      '.stats .stat:nth-child(1) .lbl':'Años en ciberseguridad',
+      '.stats .stat:nth-child(2) .lbl':'Casos de detección',
+      '.stats .stat:nth-child(3) .lbl':'Certificaciones',
+      '.stats .stat:nth-child(4) .lbl':'Máster Ciberseguridad',
+      '#skills .sec-tag':'02 — capacidades',
+      '#skills h2':'Áreas técnicas',
+      '#skills .sec-head p':'Donde aporto valor hoy y donde construyo profundidad.',
+      '.skill-card:nth-child(1) h3':'SIEM & Detection Engineering',
+      '.skill-card:nth-child(1) p':'Ciclo de vida completo de casos de uso: de la lógica SPL al mapeo MITRE y la promoción a producción.',
+      '.skill-card:nth-child(2) h3':'Incident Response & Threat Analysis',
+      '.skill-card:nth-child(2) p':'Triage e investigación de alertas, análisis de causa raíz, reconstrucción de timeline y mapeo de TTPs.',
+      '.skill-card:nth-child(3) h3':'Seguridad Ofensiva',
+      '.skill-card:nth-child(3) p':'En desarrollo activo: explotación, post-explotación, ataques a Active Directory, evasión de EDR.',
+      '.skill-card:nth-child(4) h3':'Arquitectura & Automatización',
+      '.skill-card:nth-child(4) p':'Defense-in-depth, microsegmentación, Zero Trust y automatización de workflows con Python.',
+      '#experience .sec-tag':'03 — trayectoria',
+      '#experience h2':'Experiencia',
+      '.tl-item:nth-child(1) .tl-date':'Jul 2025 — Presente',
+      '.tl-item:nth-child(1) p':'Detection engineering sobre SIEM, threat detection, triage e investigación de incidentes, automatización de workflows de seguridad y arquitectura defensiva en entornos enterprise.',
+      '.tl-item:nth-child(2) .tl-date':'Jul 2024 — Jun 2025',
+      '.tl-item:nth-child(2) p':'Soporte L2/L3 en entornos SASE/SSE, iniciativas ZTNA, triage de alertas DLP y de acceso, y apoyo a incident response sobre seguridad perimetral.',
+      '.tl-item:nth-child(3) .tl-date':'2024 — 2025',
+      '.tl-item:nth-child(3) h3':'Máster en Ciberseguridad',
+      '.tl-item:nth-child(3) p':'Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes y arquitectura de seguridad.',
+      '#roadmap .sec-tag':'04 — certificaciones',
+      '#roadmap h2':'Ruta de certificación',
+      '#roadmap .sec-head p':'Progresión desde la base defensiva hacia el red teaming.',
+      '.cert:nth-child(1) .ph':'FASE 01',
+      '.cert:nth-child(1) .badge':'EN CURSO',
+      '.cert:nth-child(2) .ph':'FASE 02',
+      '.cert:nth-child(2) .badge':'PLANIFICADO',
+      '.cert:nth-child(3) .ph':'FASE 03',
+      '.cert:nth-child(3) .badge':'PLANIFICADO',
+      '.cert:nth-child(4) .ph':'FASE 04',
+      '.cert:nth-child(4) .badge':'OBJETIVO',
+      '#writeups .sec-tag':'05 — laboratorio',
+      '#writeups h2':'Writeups CTF',
+      '#writeups .sec-head p':'Resoluciones documentadas de retos de Hack The Box, TryHackMe y competiciones CTF.',
+      '.wu-note':'&gt; Para añadir un writeup: edita <code>writeups.json</code> y añade una entrada. La web lo carga automáticamente.',
+      '#contact .sec-tag':'06 — contacto',
+      '#contact .big':'Trabajemos <span class="grad">juntos</span>'
+    },
+    writeups:{all:'Todos',empty:'> No hay writeups en esta categoría todavía.',missing:'> writeups.json no encontrado. Súbelo junto a index.html.',read:'leer writeup →'}
+  },
+  en:{
+    htmlLang:'en',
+    switchLabel:'ES',
+    title:'Oswaldo Vargas Rodríguez — Detection Engineer & Offensive Security',
+    description:'Portfolio of Oswaldo Vargas Rodríguez — Detection Engineering, SOC/SIEM, Incident Response, and offensive security.',
+    role:'> Detection Engineer · SOC/SIEM · Incident Response · Red Team in progress',
+    contactType:'$ ./contact --connect :: detection_eng · soc_siem · offensive_security',
+    selectors:{
+      '.nav-links li:nth-child(1) a':'About',
+      '.nav-links li:nth-child(2) a':'Capabilities',
+      '.nav-links li:nth-child(3) a':'Experience',
+      '.nav-links li:nth-child(4) a':'Certifications',
+      '.nav-links li:nth-child(5) a':'Writeups',
+      '.nav-links li:nth-child(6) a':'Contact',
+      '.pill':'<span class="dot"></span> Available for new challenges · Madrid, Spain',
+      '.hero h1 .decrypt:nth-child(1)':'Threat detection.',
+      '.hero h1 .decrypt:nth-child(3)':'Offensive mindset.',
+      '.hero .lead':'I build detections because I understand how attacks work; I study attacks to build stronger detections. Cybersecurity engineer transitioning toward offensive security.',
+      '.cta-row .btn-primary':'View CTF writeups →',
+      '.cta-row .btn-ghost':'Contact',
+      '#about .sec-tag':'01 — about',
+      '#about h2':'Professional profile',
+      '.about-text p:nth-child(1)':'I am <strong>Oswaldo Vargas Rodríguez</strong>, a cybersecurity engineer based in Madrid. I moved from Telecommunications Engineering into security, with hands-on experience in <strong>detection engineering, SOC/SIEM operations, and incident response</strong> in enterprise environments.',
+      '.about-text p:nth-child(2)':'My work combines designing and tuning detection use cases in Splunk, investigating alerts and incidents, critically analyzing multi-source logs, and defensive architecture — grounded in <strong>MITRE ATT&CK</strong>.',
+      '.about-text p:nth-child(3)':'My goal is clear: evolve toward <strong>red teaming</strong>. A detection engineer who knows how to attack builds detections that real attackers cannot easily evade. This portfolio documents that path.',
+      '.stats .stat:nth-child(1) .lbl':'Years in cybersecurity',
+      '.stats .stat:nth-child(2) .lbl':'Detection cases',
+      '.stats .stat:nth-child(3) .lbl':'Certifications',
+      '.stats .stat:nth-child(4) .lbl':'Cybersecurity MSc',
+      '#skills .sec-tag':'02 — capabilities',
+      '#skills h2':'Technical areas',
+      '#skills .sec-head p':'Where I bring value today and where I am building depth.',
+      '.skill-card:nth-child(1) h3':'SIEM & Detection Engineering',
+      '.skill-card:nth-child(1) p':'Full detection use-case lifecycle: from SPL logic to MITRE mapping and production promotion.',
+      '.skill-card:nth-child(2) h3':'Incident Response & Threat Analysis',
+      '.skill-card:nth-child(2) p':'Alert triage and investigation, root-cause analysis, timeline reconstruction, and TTP mapping.',
+      '.skill-card:nth-child(3) h3':'Offensive Security',
+      '.skill-card:nth-child(3) p':'Active development path: exploitation, post-exploitation, Active Directory attacks, and EDR evasion.',
+      '.skill-card:nth-child(4) h3':'Architecture & Automation',
+      '.skill-card:nth-child(4) p':'Defense-in-depth, microsegmentation, Zero Trust, and Python workflow automation.',
+      '#experience .sec-tag':'03 — experience',
+      '#experience h2':'Experience',
+      '.tl-item:nth-child(1) .tl-date':'Jul 2025 — Present',
+      '.tl-item:nth-child(1) p':'Detection engineering on SIEM, threat detection, incident triage and investigation, security workflow automation, and defensive architecture in enterprise environments.',
+      '.tl-item:nth-child(2) .tl-date':'Jul 2024 — Jun 2025',
+      '.tl-item:nth-child(2) p':'L2/L3 support in SASE/SSE environments, ZTNA initiatives, DLP and access-alert triage, and incident-response support for perimeter security.',
+      '.tl-item:nth-child(3) .tl-date':'2024 — 2025',
+      '.tl-item:nth-child(3) h3':'Master in Cybersecurity',
+      '.tl-item:nth-child(3) p':'Advanced training in offensive and defensive security, incident management, and security architecture.',
+      '#roadmap .sec-tag':'04 — certifications',
+      '#roadmap h2':'Certification roadmap',
+      '#roadmap .sec-head p':'Progression from a defensive foundation toward red teaming.',
+      '.cert:nth-child(1) .ph':'PHASE 01',
+      '.cert:nth-child(1) .badge':'IN PROGRESS',
+      '.cert:nth-child(2) .ph':'PHASE 02',
+      '.cert:nth-child(2) .badge':'PLANNED',
+      '.cert:nth-child(3) .ph':'PHASE 03',
+      '.cert:nth-child(3) .badge':'PLANNED',
+      '.cert:nth-child(4) .ph':'PHASE 04',
+      '.cert:nth-child(4) .badge':'TARGET',
+      '#writeups .sec-tag':'05 — lab',
+      '#writeups h2':'CTF Writeups',
+      '#writeups .sec-head p':'Documented walkthroughs for Hack The Box, TryHackMe, and CTF challenges.',
+      '.wu-note':'&gt; To add a writeup: edit <code>writeups.json</code> and add an entry. The site loads it automatically.',
+      '#contact .sec-tag':'06 — contact',
+      '#contact .big':'Let’s work <span class="grad">together</span>'
+    },
+    writeups:{all:'All',empty:'> No writeups in this category yet.',missing:'> writeups.json not found. Upload it next to index.html.',read:'read writeup →'}
+  }
+};
+let currentLang=localStorage.getItem('portfolioLang')||'es';
+if(!i18n[currentLang])currentLang='es';
+function copy(){return i18n[currentLang];}
+function setHtml(sel,html){const el=document.querySelector(sel);if(el)el.innerHTML=html;}
+function applyLanguage(){
+  const data=copy();
+  document.documentElement.lang=data.htmlLang;
+  document.title=data.title;
+  const meta=document.querySelector('meta[name="description"]');if(meta)meta.content=data.description;
+  Object.entries(data.selectors).forEach(([sel,html])=>{
+    setHtml(sel,html);
+    const el=document.querySelector(sel);
+    if(el&&el.classList.contains('decrypt')){el.dataset.text=el.textContent;el.dataset.final=el.textContent;}
+  });
+  const btn=document.getElementById('langSwitch');
+  if(btn){btn.textContent=data.switchLabel;btn.setAttribute('aria-label',currentLang==='es'?'Cambiar a inglés':'Switch to Spanish');}
+  const navToggle=document.getElementById('navToggle');
+  if(navToggle)navToggle.setAttribute('aria-label',currentLang==='es'?'Menú':'Menu');
+  const footer=document.querySelector('footer .wrap');
+  if(footer)footer.innerHTML=(currentLang==='es'?'&gt; designed &amp; built by Oswaldo Vargas Rodríguez · ':'&gt; designed &amp; built by Oswaldo Vargas Rodríguez · ')+'<span id="year"></span>';
+  const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
+  if(window.allWriteups&&window.allWriteups.length){buildFilters();renderWriteups(window.allWriteups);}
+}
+applyLanguage();
+/* ── BOOT SEQUENCE ── */
+(function(){
+  const lines=document.querySelectorAll('.boot-line');
+  const bar=document.querySelector('.boot-bar'),barFill=document.querySelector('.boot-bar i');
+  let d=0;
+  lines.forEach(l=>{
+    setTimeout(()=>{l.innerHTML=l.dataset.txt;l.style.opacity='1';},d);
+    d+=340;
+  });
+  setTimeout(()=>{bar.style.opacity='1';barFill.style.transition='width .9s ease';
+    barFill.style.width='100%';},d);
+  setTimeout(()=>{document.getElementById('boot').classList.add('done');
+    startIntro();},d+1200);
+})();
+
+/* ── MATRIX RAIN ── */
+(function(){
+  const c=document.getElementById('matrix'),x=c.getContext('2d');
+  let cols,drops;
+  const chars='01<>{}[]/\\#$%&*+=ABCDEF0123456789'.split('');
+  function resize(){c.width=innerWidth;c.height=innerHeight;
+    cols=Math.floor(c.width/16);drops=Array(cols).fill(1);}
+  resize();addEventListener('resize',resize);
+  function draw(){
+    x.fillStyle='rgba(19,19,28,0.08)';x.fillRect(0,0,c.width,c.height);
+    x.fillStyle='#9be8d8';x.font='14px JetBrains Mono, monospace';
+    drops.forEach((y,i)=>{
+      x.fillText(chars[Math.floor(Math.random()*chars.length)],i*16,y*16);
+      if(y*16>c.height&&Math.random()>0.975)drops[i]=0;
+      drops[i]++;
+    });
+  }
+  setInterval(draw,66);
+})();
+
+/* ── INTRO ANIMATIONS (after boot) ── */
+function startIntro(){
+  /* decrypt effect on H1 */
+  const glyphs='!<>-_\\/[]{}=+*^?#01';
+  document.querySelectorAll('.decrypt').forEach((el,idx)=>{
+    const final=el.dataset.final;let frame=0;
+    const dur=22+final.length*1.4;
+    const t=setInterval(()=>{
+      let out='';
+      for(let i=0;i<final.length;i++){
+        if(i<frame/1.6){out+=final[i];}
+        else if(final[i]===' '){out+=' ';}
+        else{out+=glyphs[Math.floor(Math.random()*glyphs.length)];}
+      }
+      el.textContent=out;frame++;
+      if(frame>dur){el.textContent=final;clearInterval(t);}
+    },38);
+  });
+  /* typewriter role */
+  typeInto('roleType',copy().role,34);
+}
+
+/* typewriter helper */
+function typeInto(id,text,speed){
+  const el=document.getElementById(id);
+  const caret=el.querySelector('.caret');
+  let i=0;
+  (function tick(){
+    if(i<=text.length){
+      el.textContent=text.slice(0,i);
+      if(caret)el.appendChild(caret);
+      i++;setTimeout(tick,speed);
+    }
+  })();
+}
+
+/* ── TERMINAL BODY reveal ── */
+(function(){
+  const lns=document.querySelectorAll('#termBody .ln');
+  const io2=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){
+      lns.forEach((l,i)=>setTimeout(()=>{
+        l.style.transition='opacity .3s';l.style.opacity='1';},i*220));
+      io2.disconnect();
+    }});},{threshold:0.3});
+  const t=document.querySelector('.term');if(t)io2.observe(t);
+})();
+
+/* ── NAV ── */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>30));
+const navToggle=document.getElementById('navToggle'),navLinks=document.getElementById('navLinks');
+navToggle.addEventListener('click',()=>navLinks.classList.toggle('open'));
+navLinks.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>navLinks.classList.remove('open')));
+document.getElementById('langSwitch').addEventListener('click',()=>{
+  currentLang=currentLang==='es'?'en':'es';
+  localStorage.setItem('portfolioLang',currentLang);
+  applyLanguage();
+});
+document.getElementById('year').textContent=new Date().getFullYear();
+
+/* ── STATUS BAR clock + hash ── */
+function pad(n){return String(n).padStart(2,'0');}
+setInterval(()=>{
+  const d=new Date();
+  document.getElementById('sbTime').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
+  document.getElementById('sbHash').textContent='0x'+Math.floor(Math.random()*0xffffffff).toString(16).padStart(8,'0').toUpperCase();
+},1000);
+
+/* ── SCROLL REVEAL ── */
+const io=new IntersectionObserver(es=>{es.forEach(e=>{
+  if(e.isIntersecting){e.target.classList.add('in');
+    if(e.target.querySelector&&e.target.querySelector('[data-count],[data-text]'))runCounters(e.target);
+    io.unobserve(e.target);}});},{threshold:0.18});
+document.querySelectorAll('.zoom-reveal,.fade-up').forEach((el,i)=>{
+  el.style.transitionDelay=(i%4*0.08)+'s';io.observe(el);});
+
+function runCounters(scope){
+  scope.querySelectorAll('[data-count],[data-text]').forEach(el=>{
+    if(el.dataset.text){el.textContent=el.dataset.text;return;}
+    const target=+el.dataset.count,suf=el.dataset.suffix||'';
+    let n=0;const step=target/40;
+    const t=setInterval(()=>{n+=step;if(n>=target){n=target;clearInterval(t);}
+      el.textContent=Math.floor(n)+suf;},22);});
+}
+
+/* ── CONTACT typewriter when visible ── */
+(function(){
+  const io3=new IntersectionObserver(es=>{es.forEach(e=>{
+    if(e.isIntersecting){
+      typeInto('ctType',copy().contactType,32);
+      io3.disconnect();
+    }});},{threshold:0.4});
+  io3.observe(document.getElementById('ctType'));
+})();
+
+/* ── WRITEUPS LOADER ── */
+const grid=document.getElementById('wuGrid'),filterBar=document.getElementById('wuFilters');
+var allWriteups=window.allWriteups||[];
+window.allWriteups=allWriteups;
+function diffClass(d){const x=(d||'').toLowerCase();
+  if(x.includes('insane'))return'd-insane';if(x.includes('hard'))return'd-hard';
+  if(x.includes('med'))return'd-medium';return'd-easy';}
+function renderWriteups(list){
+  grid.innerHTML='';
+  if(!list.length){grid.innerHTML=`<div class="wu-empty">${copy().writeups.empty}</div>`;return;}
+  list.forEach((w,i)=>{
+    const card=document.createElement('a');
+    card.className='wu-card zoom-reveal';card.href=w.url||'#';
+    if(w.url){card.target='_blank';card.rel='noopener';}
+    card.style.transitionDelay=(i%4*0.07)+'s';
+    const title=currentLang==='en'&&w.title_en?w.title_en:w.title;
+    const category=currentLang==='en'&&w.category_en?w.category_en:w.category;
+    const summary=currentLang==='en'&&w.summary_en?w.summary_en:w.summary;
+    const tags=(w.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
+    card.innerHTML=`<div class="wu-top">
+        <span class="wu-platform">${w.platform||'CTF'}</span>
+        <span class="wu-diff ${diffClass(w.difficulty)}">${w.difficulty||'—'}</span></div>
+      <h3>${title||(currentLang==='es'?'Sin título':'Untitled')}</h3>
+      <div class="wu-meta">${category||'general'} · ${w.date||''}</div>
+      <p>${summary||''}</p>
+      <div class="wu-tags">${tags}</div>
+      <div class="wu-arrow">${copy().writeups.read}</div>`;
+    grid.appendChild(card);
+    io.observe(card);
+  });
+}
+function buildFilters(){
+  const cats=[copy().writeups.all,...new Set(allWriteups.map(w=>currentLang==='en'&&w.category_en?w.category_en:w.category).filter(Boolean))];
+  filterBar.innerHTML='';
+  cats.forEach((c,i)=>{
+    const b=document.createElement('button');
+    b.className='filter-btn'+(i===0?' active':'');b.textContent=c;
+    b.addEventListener('click',()=>{
+      filterBar.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      renderWriteups(c===copy().writeups.all?allWriteups:allWriteups.filter(w=>(currentLang==='en'&&w.category_en?w.category_en:w.category)===c));});
+    filterBar.appendChild(b);});
+}
+fetch('writeups.json')
+  .then(r=>{if(!r.ok)throw new Error('no json');return r.json();})
+  .then(data=>{allWriteups=Array.isArray(data)?data:[];window.allWriteups=allWriteups;
+    allWriteups.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    buildFilters();renderWriteups(allWriteups);})
+  .catch(()=>{filterBar.innerHTML='';
+    grid.innerHTML=`<div class="wu-empty">${copy().writeups.missing}</div>`;});
+</script>
+</body>
+</html>
