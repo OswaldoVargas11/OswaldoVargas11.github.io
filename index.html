@@ -64,6 +64,11 @@ body{
     rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px)}
 .bg-noise{position:fixed;inset:0;z-index:-1;opacity:0.025;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.bg-circuit{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.08;
+  background:
+    linear-gradient(90deg,transparent 0 47%,rgba(155,232,216,0.35) 48% 49%,transparent 50%),
+    linear-gradient(0deg,transparent 0 47%,rgba(197,184,255,0.25) 48% 49%,transparent 50%);
+  background-size:96px 96px;mask-image:radial-gradient(circle at 50% 20%,#000,transparent 72%)}
 
 .wrap{max-width:1120px;margin:0 auto;padding:0 32px}
 section{padding:120px 0;position:relative}
@@ -75,13 +80,23 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;
 nav.scrolled{border-bottom-color:var(--line)}
 .nav-inner{max-width:1120px;margin:0 auto;padding:18px 32px;
   display:flex;justify-content:space-between;align-items:center}
-.logo{font-family:'Clash Display',sans-serif;font-weight:600;font-size:1.15rem;
-  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:9px}
-.logo .badge{width:30px;height:30px;border-radius:9px;
-  background:linear-gradient(135deg,var(--lav),var(--mint));
-  display:flex;align-items:center;justify-content:center;
-  color:#13131c;font-weight:700;font-size:0.85rem;font-family:'JetBrains Mono',monospace}
-.nav-links{display:flex;gap:34px;list-style:none}
+.logo{font-family:'Clash Display',sans-serif;font-weight:600;
+  text-decoration:none;color:var(--text);display:flex;align-items:center;gap:12px}
+.logo .badge{width:42px;height:42px;border-radius:12px;
+  background:linear-gradient(135deg,rgba(197,184,255,0.98),rgba(155,232,216,0.95));
+  display:grid;place-items:center;color:#13131c;font-weight:700;
+  font-size:0.74rem;font-family:'JetBrains Mono',monospace;position:relative;
+  box-shadow:0 0 24px rgba(155,232,216,0.16);overflow:hidden}
+.logo .badge::before{content:'';position:absolute;inset:7px;border:1px solid rgba(19,19,28,0.55);
+  border-radius:8px;clip-path:polygon(0 0,75% 0,100% 28%,100% 100%,20% 100%,0 78%)}
+.logo .badge::after{content:'';position:absolute;width:120%;height:1px;background:rgba(19,19,28,0.5);
+  transform:rotate(-35deg);animation:logoScan 3.4s linear infinite}
+.logo .brand{display:flex;flex-direction:column;line-height:1.05}
+.logo .brand-name{font-size:1.02rem;letter-spacing:0}
+.logo .brand-role{font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--mint);
+  margin-top:3px;font-weight:500}
+@keyframes logoScan{0%{top:-20%}100%{top:120%}}
+.nav-links{display:flex;gap:24px;list-style:none}
 .nav-links a{color:var(--muted);text-decoration:none;font-size:0.92rem;
   font-weight:500;transition:color .2s;position:relative}
 .nav-links a:hover{color:var(--text)}
@@ -142,6 +157,15 @@ nav.scrolled{border-bottom-color:var(--line)}
 .hero .role .caret{display:inline-block;width:9px;height:1.05em;
   background:var(--mint);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
 .hero p.lead{color:var(--muted);max-width:600px;font-size:1.1rem;margin-bottom:40px}
+.signal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:900px;
+  margin:34px 0 0}
+.signal{background:rgba(30,30,45,0.72);border:1px solid var(--line);border-radius:12px;
+  padding:14px 16px;font-family:'JetBrains Mono',monospace;position:relative;overflow:hidden}
+.signal::before{content:'';position:absolute;left:0;right:0;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--mint),transparent);opacity:.55}
+.signal .sig-k{display:block;color:var(--dim);font-size:0.65rem;margin-bottom:5px}
+.signal .sig-v{display:block;color:var(--text);font-size:0.78rem;white-space:nowrap}
+.signal .sig-v::before{content:'>';color:var(--mint);margin-right:6px}
 .cta-row{display:flex;gap:16px;flex-wrap:wrap}
 .btn{font-weight:500;font-size:0.97rem;padding:15px 28px;border-radius:12px;
   text-decoration:none;display:inline-flex;align-items:center;gap:9px;
@@ -254,8 +278,26 @@ nav.scrolled{border-bottom-color:var(--line)}
   font-family:'JetBrains Mono',monospace}
 .tl-item p{color:var(--muted);font-size:0.95rem}
 
+/* ── EDUCATION ── */
+.edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.edu-card{background:linear-gradient(180deg,rgba(30,30,45,0.95),rgba(14,14,22,0.96));
+  border:1px solid var(--line);border-radius:var(--r);padding:28px;position:relative;
+  overflow:hidden;transition:transform .35s cubic-bezier(.16,1,.3,1),border-color .3s}
+.edu-card::before{content:'';position:absolute;inset:auto 0 0 0;height:3px;
+  background:linear-gradient(90deg,var(--lav),var(--mint),var(--peach))}
+.edu-card:hover{transform:translateY(-8px);border-color:var(--mint)}
+.edu-top{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;margin-bottom:14px}
+.edu-mark{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;
+  background:rgba(155,232,216,0.12);border:1px solid rgba(155,232,216,0.32);
+  color:var(--mint);font-family:'JetBrains Mono',monospace;font-weight:700}
+.edu-date{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--dim)}
+.edu-card h3{font-family:'Clash Display',sans-serif;font-size:1.24rem;font-weight:600;margin-bottom:6px}
+.edu-org{font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:var(--lav);margin-bottom:12px}
+.edu-card p{color:var(--muted);font-size:0.94rem}
+.edu-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
 /* ── ROADMAP ── */
-.roadmap{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .cert{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
   padding:26px;transition:all .35s cubic-bezier(.16,1,.3,1);position:relative}
 .cert:hover{transform:translateY(-8px) scale(1.03);border-color:var(--lav)}
@@ -267,6 +309,8 @@ nav.scrolled{border-bottom-color:var(--line)}
   padding:5px 10px;border-radius:6px;display:inline-block}
 .b-prog{background:rgba(255,201,168,0.14);color:var(--peach);
   border:1px solid rgba(255,201,168,0.32)}
+.b-done{background:rgba(155,232,216,0.14);color:var(--mint);
+  border:1px solid rgba(155,232,216,0.32)}
 .b-plan{background:rgba(168,164,190,0.1);color:var(--muted);border:1px solid var(--line)}
 .cert-connector{position:absolute;right:-12px;top:50%;color:var(--dim);
   font-size:0.9rem;z-index:2}
@@ -342,10 +386,14 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
   .nav-actions{gap:10px}
   .nav-toggle{display:block}
   .about-grid{grid-template-columns:1fr}
-  .skills-grid,.wu-grid{grid-template-columns:1fr}
-  .stats,.roadmap{grid-template-columns:repeat(2,1fr)}
+  .skills-grid,.wu-grid,.edu-grid{grid-template-columns:1fr}
+  .stats,.roadmap,.signal-grid{grid-template-columns:repeat(2,1fr)}
   .cert-connector{display:none}
   section{padding:80px 0}
+}
+@media(max-width:560px){
+  .logo .brand-role{display:none}
+  .signal-grid,.stats,.roadmap{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -365,17 +413,22 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 
 <canvas id="matrix"></canvas>
 <div class="bg-mesh"></div>
+<div class="bg-circuit"></div>
 <div class="bg-scan"></div>
 <div class="bg-noise"></div>
 
 <!-- NAV -->
 <nav id="nav">
   <div class="nav-inner">
-    <a href="#top" class="logo"><span class="badge">OV</span>Oswaldo Vargas</a>
+    <a href="#top" class="logo">
+      <span class="badge">OVR</span>
+      <span class="brand"><span class="brand-name">Oswaldo Vargas</span><span class="brand-role">detection://engineer</span></span>
+    </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#about">Sobre mí</a></li>
       <li><a href="#skills">Capacidades</a></li>
       <li><a href="#experience">Trayectoria</a></li>
+      <li><a href="#education">Formación</a></li>
       <li><a href="#roadmap">Certificaciones</a></li>
       <li><a href="#writeups">Writeups</a></li>
       <li><a href="#contact">Contacto</a></li>
@@ -404,6 +457,12 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
     <div class="cta-row fade-up">
       <a href="#writeups" class="btn btn-primary">Ver writeups CTF →</a>
       <a href="#contact" class="btn btn-ghost">Contactar</a>
+    </div>
+    <div class="signal-grid fade-up">
+      <div class="signal"><span class="sig-k">SIEM_CORE</span><span class="sig-v">Splunk / SPL</span></div>
+      <div class="signal"><span class="sig-k">IR_STACK</span><span class="sig-v">Cortex XDR</span></div>
+      <div class="signal"><span class="sig-k">EDGE_SECURITY</span><span class="sig-v">SASE / ZTNA</span></div>
+      <div class="signal"><span class="sig-k">TELEMETRY</span><span class="sig-v">AWS / NGFW</span></div>
     </div>
     <div class="term fade-up">
       <div class="term-head">
@@ -549,11 +608,42 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
         <div class="org">Amadeus</div>
         <p>Soporte L2/L3 en entornos SASE/SSE, iniciativas ZTNA, triage de alertas DLP y de acceso, y apoyo a incident response sobre seguridad perimetral.</p>
       </div>
-      <div class="tl-item fade-up">
-        <div class="tl-date">2024 — 2025</div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="wrap">
+    <div class="sec-head fade-up">
+      <span class="sec-tag">04 — formación</span>
+      <h2>Estudios</h2>
+      <p>Base académica en ingeniería y especialización formal en ciberseguridad.</p>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card zoom-reveal">
+        <div class="edu-top">
+          <div class="edu-mark">MSc</div>
+          <div class="edu-date">Abr 2024 — Jun 2025</div>
+        </div>
         <h3>Máster en Ciberseguridad</h3>
-        <div class="org">IMF Business School / Deloitte / UCAV</div>
-        <p>Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes y arquitectura de seguridad.</p>
+        <div class="edu-org">IMF Business School / Deloitte / UCAV</div>
+        <p>Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes, arquitectura de seguridad y operación de controles en entornos empresariales.</p>
+        <div class="edu-tags">
+          <span class="tag">Incident Management</span><span class="tag">Security Architecture</span><span class="tag">Offensive & Defensive Security</span>
+        </div>
+      </div>
+      <div class="edu-card zoom-reveal">
+        <div class="edu-top">
+          <div class="edu-mark">B.Eng</div>
+          <div class="edu-date">Sep 2019 — Dic 2023</div>
+        </div>
+        <h3>Ingeniería Telemática</h3>
+        <div class="edu-org">Pontificia Universidad Católica Madre y Maestra</div>
+        <p>Base en redes, telecomunicaciones, sistemas distribuidos e ingeniería aplicada. Proyecto final: conversión GTFS de rutas de transporte público.</p>
+        <div class="edu-tags">
+          <span class="tag">Networking</span><span class="tag">Telecommunications</span><span class="tag">Systems Engineering</span>
+        </div>
       </div>
     </div>
   </div>
@@ -563,33 +653,40 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 <section id="roadmap">
   <div class="wrap">
     <div class="sec-head fade-up">
-      <span class="sec-tag">04 — certificaciones</span>
-      <h2>Ruta de certificación</h2>
-      <p>Certificaciones y aprendizaje continuo para reforzar SOC/SIEM, threat intelligence, cloud, arquitectura y conocimiento ofensivo aplicado.</p>
+      <span class="sec-tag">05 — certificaciones</span>
+      <h2>Certificaciones</h2>
+      <p>Credenciales y formación continua que refuerzan cloud, threat intelligence, SOC/SIEM, redes y seguridad defensiva.</p>
     </div>
     <div class="roadmap">
       <div class="cert zoom-reveal">
-        <div class="ph">FASE 01</div><h4>Splunk PU</h4>
-        <div class="cn">Core Certified Power User</div>
+        <div class="ph">COMPTIA</div><h4>Cloud Essentials+</h4>
+        <div class="cn">Cloud concepts, governance and business alignment</div>
+        <span class="badge b-done">CERTIFICADO</span>
+      </div>
+      <div class="cert zoom-reveal">
+        <div class="ph">ARCX</div><h4>FLTIA</h4>
+        <div class="cn">Foundation Level Threat Intelligence Analyst</div>
+        <span class="badge b-done">CERTIFICADO</span>
+      </div>
+      <div class="cert zoom-reveal">
+        <div class="ph">EC-COUNCIL</div><h4>CCT</h4>
+        <div class="cn">Certified Cybersecurity Technician</div>
         <span class="badge b-prog">EN CURSO</span>
-        <span class="cert-connector">→</span>
       </div>
       <div class="cert zoom-reveal">
-        <div class="ph">FASE 02</div><h4>CPTS</h4>
-        <div class="cn">HTB Penetration Testing Specialist</div>
-        <span class="badge b-plan">PLANIFICADO</span>
-        <span class="cert-connector">→</span>
+        <div class="ph">FORTINET</div><h4>NSE 1-3</h4>
+        <div class="cn">Network Security Associate</div>
+        <span class="badge b-done">CERTIFICADO</span>
       </div>
       <div class="cert zoom-reveal">
-        <div class="ph">FASE 03</div><h4>OSCP</h4>
-        <div class="cn">OffSec Certified Professional</div>
-        <span class="badge b-plan">PLANIFICADO</span>
-        <span class="cert-connector">→</span>
+        <div class="ph">IBM</div><h4>Cybersecurity Analyst</h4>
+        <div class="cn">SOC operations, network security and incident response</div>
+        <span class="badge b-done">CERTIFICADO</span>
       </div>
       <div class="cert zoom-reveal">
-        <div class="ph">FASE 04</div><h4>CRTO</h4>
-        <div class="cn">Certified Red Team Operator</div>
-        <span class="badge b-plan">OBJETIVO</span>
+        <div class="ph">SPLUNK</div><h4>Power User</h4>
+        <div class="cn">Core Certified Power User path</div>
+        <span class="badge b-prog">EN CURSO</span>
       </div>
     </div>
   </div>
@@ -599,7 +696,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 <section id="writeups">
   <div class="wrap">
     <div class="sec-head fade-up">
-      <span class="sec-tag">05 — laboratorio</span>
+      <span class="sec-tag">06 — laboratorio</span>
       <h2>Writeups CTF</h2>
       <p>Resoluciones documentadas de retos de Hack The Box, TryHackMe y competiciones CTF.</p>
     </div>
@@ -615,7 +712,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 <section id="contact" class="contact">
   <div class="wrap">
     <div class="fade-up">
-      <span class="sec-tag" style="justify-content:center">06 — contacto</span>
+      <span class="sec-tag" style="justify-content:center">07 — contacto</span>
       <div class="big">Trabajemos <span class="grad">juntos</span></div>
       <div class="ctline" id="ctType"><span class="caret"></span></div>
       <div class="contact-links">
@@ -656,9 +753,11 @@ const i18n={
       '.nav-links li:nth-child(1) a':'Sobre mí',
       '.nav-links li:nth-child(2) a':'Capacidades',
       '.nav-links li:nth-child(3) a':'Trayectoria',
-      '.nav-links li:nth-child(4) a':'Certificaciones',
-      '.nav-links li:nth-child(5) a':'Writeups',
-      '.nav-links li:nth-child(6) a':'Contacto',
+      '.nav-links li:nth-child(4) a':'Formación',
+      '.nav-links li:nth-child(5) a':'Certificaciones',
+      '.nav-links li:nth-child(6) a':'Writeups',
+      '.nav-links li:nth-child(7) a':'Contacto',
+      '.brand-role':'detection://engineer',
       '.pill':'<span class="dot"></span> Disponible para nuevos retos · Madrid, España',
       '.hero h1 .decrypt:nth-child(1)':'Ingeniería de detección.',
       '.hero h1 .decrypt:nth-child(3)':'Arquitectura defensiva.',
@@ -691,25 +790,35 @@ const i18n={
       '.tl-item:nth-child(1) p':'Detection engineering sobre SIEM, threat detection, triage e investigación de incidentes, automatización de workflows de seguridad y arquitectura defensiva en entornos enterprise.',
       '.tl-item:nth-child(2) .tl-date':'Jul 2024 — Jun 2025',
       '.tl-item:nth-child(2) p':'Soporte L2/L3 en entornos SASE/SSE, iniciativas ZTNA, triage de alertas DLP y de acceso, y apoyo a incident response sobre seguridad perimetral.',
-      '.tl-item:nth-child(3) .tl-date':'2024 — 2025',
-      '.tl-item:nth-child(3) h3':'Máster en Ciberseguridad',
-      '.tl-item:nth-child(3) p':'Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes y arquitectura de seguridad.',
-      '#roadmap .sec-tag':'04 — certificaciones',
-      '#roadmap h2':'Ruta de certificación',
-      '#roadmap .sec-head p':'Certificaciones y aprendizaje continuo para reforzar SOC/SIEM, threat intelligence, cloud, arquitectura y conocimiento ofensivo aplicado.',
-      '.cert:nth-child(1) .ph':'FASE 01',
-      '.cert:nth-child(1) .badge':'EN CURSO',
-      '.cert:nth-child(2) .ph':'FASE 02',
-      '.cert:nth-child(2) .badge':'PLANIFICADO',
-      '.cert:nth-child(3) .ph':'FASE 03',
-      '.cert:nth-child(3) .badge':'PLANIFICADO',
-      '.cert:nth-child(4) .ph':'FASE 04',
-      '.cert:nth-child(4) .badge':'OBJETIVO',
-      '#writeups .sec-tag':'05 — laboratorio',
+      '#education .sec-tag':'04 — formación',
+      '#education h2':'Estudios',
+      '#education .sec-head p':'Base académica en ingeniería y especialización formal en ciberseguridad.',
+      '.edu-card:nth-child(1) .edu-date':'Abr 2024 — Jun 2025',
+      '.edu-card:nth-child(1) h3':'Máster en Ciberseguridad',
+      '.edu-card:nth-child(1) p':'Formación avanzada en seguridad ofensiva y defensiva, gestión de incidentes, arquitectura de seguridad y operación de controles en entornos empresariales.',
+      '.edu-card:nth-child(2) .edu-date':'Sep 2019 — Dic 2023',
+      '.edu-card:nth-child(2) h3':'Ingeniería Telemática',
+      '.edu-card:nth-child(2) p':'Base en redes, telecomunicaciones, sistemas distribuidos e ingeniería aplicada. Proyecto final: conversión GTFS de rutas de transporte público.',
+      '#roadmap .sec-tag':'05 — certificaciones',
+      '#roadmap h2':'Certificaciones',
+      '#roadmap .sec-head p':'Credenciales y formación continua que refuerzan cloud, threat intelligence, SOC/SIEM, redes y seguridad defensiva.',
+      '.cert:nth-child(1) .cn':'Conceptos cloud, gobierno y alineación de negocio',
+      '.cert:nth-child(2) .cn':'Foundation Level Threat Intelligence Analyst',
+      '.cert:nth-child(3) .cn':'Certified Cybersecurity Technician',
+      '.cert:nth-child(4) .cn':'Network Security Associate',
+      '.cert:nth-child(5) .cn':'Operaciones SOC, seguridad de red e incident response',
+      '.cert:nth-child(6) .cn':'Ruta Core Certified Power User',
+      '.cert:nth-child(1) .badge':'CERTIFICADO',
+      '.cert:nth-child(2) .badge':'CERTIFICADO',
+      '.cert:nth-child(3) .badge':'EN CURSO',
+      '.cert:nth-child(4) .badge':'CERTIFICADO',
+      '.cert:nth-child(5) .badge':'CERTIFICADO',
+      '.cert:nth-child(6) .badge':'EN CURSO',
+      '#writeups .sec-tag':'06 — laboratorio',
       '#writeups h2':'Writeups CTF',
       '#writeups .sec-head p':'Resoluciones documentadas de retos de Hack The Box, TryHackMe y competiciones CTF.',
       '.wu-note':'&gt; Para añadir un writeup: edita <code>writeups.json</code> y añade una entrada. La web lo carga automáticamente.',
-      '#contact .sec-tag':'06 — contacto',
+      '#contact .sec-tag':'07 — contacto',
       '#contact .big':'Trabajemos <span class="grad">juntos</span>'
     },
     writeups:{all:'Todos',empty:'> No hay writeups en esta categoría todavía.',missing:'> writeups.json no encontrado. Súbelo junto a index.html.',read:'leer writeup →'}
@@ -725,9 +834,11 @@ const i18n={
       '.nav-links li:nth-child(1) a':'About',
       '.nav-links li:nth-child(2) a':'Capabilities',
       '.nav-links li:nth-child(3) a':'Experience',
-      '.nav-links li:nth-child(4) a':'Certifications',
-      '.nav-links li:nth-child(5) a':'Writeups',
-      '.nav-links li:nth-child(6) a':'Contact',
+      '.nav-links li:nth-child(4) a':'Education',
+      '.nav-links li:nth-child(5) a':'Certifications',
+      '.nav-links li:nth-child(6) a':'Writeups',
+      '.nav-links li:nth-child(7) a':'Contact',
+      '.brand-role':'detection://engineer',
       '.pill':'<span class="dot"></span> Available for new challenges · Madrid, Spain',
       '.hero h1 .decrypt:nth-child(1)':'Detection engineering.',
       '.hero h1 .decrypt:nth-child(3)':'Defensive architecture.',
@@ -760,25 +871,35 @@ const i18n={
       '.tl-item:nth-child(1) p':'Detection engineering on SIEM, threat detection, incident triage and investigation, security workflow automation, and defensive architecture in enterprise environments.',
       '.tl-item:nth-child(2) .tl-date':'Jul 2024 — Jun 2025',
       '.tl-item:nth-child(2) p':'L2/L3 support in SASE/SSE environments, ZTNA initiatives, DLP and access-alert triage, and incident-response support for perimeter security.',
-      '.tl-item:nth-child(3) .tl-date':'2024 — 2025',
-      '.tl-item:nth-child(3) h3':'Master in Cybersecurity',
-      '.tl-item:nth-child(3) p':'Advanced training in offensive and defensive security, incident management, and security architecture.',
-      '#roadmap .sec-tag':'04 — certifications',
-      '#roadmap h2':'Certification roadmap',
-      '#roadmap .sec-head p':'Certifications and continuous learning to strengthen SOC/SIEM, threat intelligence, cloud, architecture, and applied offensive knowledge.',
-      '.cert:nth-child(1) .ph':'PHASE 01',
-      '.cert:nth-child(1) .badge':'IN PROGRESS',
-      '.cert:nth-child(2) .ph':'PHASE 02',
-      '.cert:nth-child(2) .badge':'PLANNED',
-      '.cert:nth-child(3) .ph':'PHASE 03',
-      '.cert:nth-child(3) .badge':'PLANNED',
-      '.cert:nth-child(4) .ph':'PHASE 04',
-      '.cert:nth-child(4) .badge':'TARGET',
-      '#writeups .sec-tag':'05 — lab',
+      '#education .sec-tag':'04 — education',
+      '#education h2':'Education',
+      '#education .sec-head p':'Academic engineering foundation and formal cybersecurity specialization.',
+      '.edu-card:nth-child(1) .edu-date':'Apr 2024 — Jun 2025',
+      '.edu-card:nth-child(1) h3':'Master in Cybersecurity',
+      '.edu-card:nth-child(1) p':'Advanced training in offensive and defensive security, incident management, security architecture, and control operation in enterprise environments.',
+      '.edu-card:nth-child(2) .edu-date':'Sep 2019 — Dec 2023',
+      '.edu-card:nth-child(2) h3':'B.Eng. in Telematics Engineering',
+      '.edu-card:nth-child(2) p':'Foundation in networking, telecommunications, distributed systems, and applied engineering. Final project: GTFS conversion for public transport routes.',
+      '#roadmap .sec-tag':'05 — certifications',
+      '#roadmap h2':'Certifications',
+      '#roadmap .sec-head p':'Credentials and continuous learning across cloud, threat intelligence, SOC/SIEM, networking, and defensive security.',
+      '.cert:nth-child(1) .cn':'Cloud concepts, governance and business alignment',
+      '.cert:nth-child(2) .cn':'Foundation Level Threat Intelligence Analyst',
+      '.cert:nth-child(3) .cn':'Certified Cybersecurity Technician',
+      '.cert:nth-child(4) .cn':'Network Security Associate',
+      '.cert:nth-child(5) .cn':'SOC operations, network security and incident response',
+      '.cert:nth-child(6) .cn':'Core Certified Power User path',
+      '.cert:nth-child(1) .badge':'CERTIFIED',
+      '.cert:nth-child(2) .badge':'CERTIFIED',
+      '.cert:nth-child(3) .badge':'IN PROGRESS',
+      '.cert:nth-child(4) .badge':'CERTIFIED',
+      '.cert:nth-child(5) .badge':'CERTIFIED',
+      '.cert:nth-child(6) .badge':'IN PROGRESS',
+      '#writeups .sec-tag':'06 — lab',
       '#writeups h2':'CTF Writeups',
       '#writeups .sec-head p':'Documented walkthroughs for Hack The Box, TryHackMe, and CTF challenges.',
       '.wu-note':'&gt; To add a writeup: edit <code>writeups.json</code> and add an entry. The site loads it automatically.',
-      '#contact .sec-tag':'06 — contact',
+      '#contact .sec-tag':'07 — contact',
       '#contact .big':'Let’s work <span class="grad">together</span>'
     },
     writeups:{all:'All',empty:'> No writeups in this category yet.',missing:'> writeups.json not found. Upload it next to index.html.',read:'read writeup →'}
