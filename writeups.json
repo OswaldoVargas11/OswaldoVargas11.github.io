@@ -1,5 +1,19 @@
 [
   {
+    "title": "Reactor - HTB Writeup",
+    "title_en": "Reactor - HTB Writeup",
+    "platform": "Hack The Box",
+    "category": "HTB",
+    "category_en": "HTB",
+    "difficulty": "Medium",
+    "date": "2026-05-27",
+    "status": "locked",
+    "tags": ["No Spoilers", "Pending Retirement", "Linux", "Medium"],
+    "summary": "Ficha pública sin spoilers. El walkthrough completo se publicará únicamente cuando Reactor aparezca como máquina retirada en Hack The Box.",
+    "summary_en": "Spoiler-free public brief. The full walkthrough will be published only after Reactor appears as a retired machine on Hack The Box.",
+    "url": "writeups/reactor.html"
+  },
+  {
     "title": "Ejemplo: HTB - Active Directory Lab",
     "title_en": "Example: HTB - Active Directory Lab",
     "platform": "Hack The Box",

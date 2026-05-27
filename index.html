@@ -328,6 +328,12 @@ nav.scrolled{border-bottom-color:var(--line)}
   padding:28px;text-decoration:none;color:var(--text);display:flex;flex-direction:column;
   transition:transform .4s cubic-bezier(.16,1,.3,1),border-color .3s,box-shadow .3s;
   position:relative;overflow:hidden}
+.wu-card.locked{border-color:rgba(255,201,168,0.34);
+  background:linear-gradient(180deg,rgba(30,30,45,0.96),rgba(22,18,28,0.96))}
+.wu-card.locked::before{content:'LOCKED';position:absolute;right:18px;top:18px;
+  font-family:'JetBrains Mono',monospace;font-size:0.62rem;letter-spacing:1px;
+  color:var(--peach);border:1px solid rgba(255,201,168,0.38);border-radius:6px;
+  padding:4px 8px;background:rgba(255,201,168,0.08)}
 .wu-card::after{content:'';position:absolute;inset:0;
   background:linear-gradient(135deg,transparent 60%,rgba(197,184,255,0.06));
   opacity:0;transition:opacity .4s}
@@ -338,6 +344,8 @@ nav.scrolled{border-bottom-color:var(--line)}
 .wu-platform{font-family:'JetBrains Mono',monospace;font-size:0.74rem;color:var(--mint)}
 .wu-diff{font-family:'JetBrains Mono',monospace;font-size:0.68rem;
   padding:4px 10px;border-radius:6px}
+.wu-diff.locked{background:rgba(255,201,168,0.14);color:var(--peach);
+  border:1px solid rgba(255,201,168,0.28)}
 .d-easy{background:rgba(155,232,216,0.14);color:var(--mint)}
 .d-medium{background:rgba(255,201,168,0.14);color:var(--peach)}
 .d-hard{background:rgba(246,184,208,0.16);color:var(--rose)}
@@ -1063,7 +1071,8 @@ function renderWriteups(list){
   if(!list.length){grid.innerHTML=`<div class="wu-empty">${copy().writeups.empty}</div>`;return;}
   list.forEach((w,i)=>{
     const card=document.createElement('a');
-    card.className='wu-card zoom-reveal';card.href=w.url||'#';
+    const locked=w.status==='locked'||w.locked===true;
+    card.className='wu-card zoom-reveal'+(locked?' locked':'');card.href=w.url||'#';
     if(w.url){card.target='_blank';card.rel='noopener';}
     card.style.transitionDelay=(i%4*0.07)+'s';
     const title=currentLang==='en'&&w.title_en?w.title_en:w.title;
@@ -1072,12 +1081,12 @@ function renderWriteups(list){
     const tags=(w.tags||[]).map(t=>`<span class="tag">${t}</span>`).join('');
     card.innerHTML=`<div class="wu-top">
         <span class="wu-platform">${w.platform||'CTF'}</span>
-        <span class="wu-diff ${diffClass(w.difficulty)}">${w.difficulty||'—'}</span></div>
+        <span class="wu-diff ${locked?'locked':diffClass(w.difficulty)}">${locked?(currentLang==='es'?'PENDIENTE':'LOCKED'):(w.difficulty||'—')}</span></div>
       <h3>${title||(currentLang==='es'?'Sin título':'Untitled')}</h3>
       <div class="wu-meta">${category||'general'} · ${w.date||''}</div>
       <p>${summary||''}</p>
       <div class="wu-tags">${tags}</div>
-      <div class="wu-arrow">${copy().writeups.read}</div>`;
+      <div class="wu-arrow">${locked?(currentLang==='es'?'ver ficha sin spoilers →':'view spoiler-free brief →'):copy().writeups.read}</div>`;
     grid.appendChild(card);
     io.observe(card);
   });
