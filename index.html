@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#13131c;
-  --bg-soft:#1a1a26;
-  --panel:#1e1e2d;
+  --bg:#0f1118;
+  --bg-soft:#171b25;
+  --panel:#1b2130;
   --panel-hi:#262638;
   --line:#2e2e42;
   --text:#f0eef6;
@@ -35,9 +35,7 @@ body{
 ::selection{background:var(--lav);color:#13131c}
 
 /* ── BOOT SCREEN ── */
-#boot{position:fixed;inset:0;z-index:10000;background:var(--bg);
-  display:flex;align-items:center;justify-content:center;
-  transition:opacity .6s ease,visibility .6s}
+#boot{display:none}
 #boot.done{opacity:0;visibility:hidden}
 .boot-term{width:min(560px,86vw);font-family:'JetBrains Mono',monospace;
   font-size:0.86rem;line-height:1.9}
@@ -51,7 +49,7 @@ body{
   background:linear-gradient(90deg,var(--lav),var(--mint))}
 
 /* ── MATRIX RAIN CANVAS ── */
-#matrix{position:fixed;inset:0;z-index:-3;opacity:0.06;pointer-events:none}
+#matrix{display:none}
 
 /* ── BACKGROUND ── */
 .bg-mesh{position:fixed;inset:0;z-index:-2;
@@ -59,12 +57,12 @@ body{
     radial-gradient(circle at 18% 12%,rgba(197,184,255,0.16),transparent 42%),
     radial-gradient(circle at 82% 28%,rgba(155,232,216,0.13),transparent 45%),
     radial-gradient(circle at 50% 88%,rgba(255,201,168,0.1),transparent 48%);}
-.bg-scan{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.4;
+.bg-scan{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.12;
   background:repeating-linear-gradient(0deg,transparent 0,transparent 2px,
     rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px)}
 .bg-noise{position:fixed;inset:0;z-index:-1;opacity:0.025;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-.bg-circuit{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.08;
+.bg-circuit{display:none;
   background:
     linear-gradient(90deg,transparent 0 47%,rgba(155,232,216,0.35) 48% 49%,transparent 50%),
     linear-gradient(0deg,transparent 0 47%,rgba(197,184,255,0.25) 48% 49%,transparent 50%);
@@ -111,11 +109,8 @@ nav.scrolled{border-bottom-color:var(--line)}
 .nav-toggle{display:none;background:none;border:none;color:var(--text);
   font-size:1.6rem;cursor:pointer}
 
-/* ── HACKER STATUS BAR ── */
-.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:90;
-  background:rgba(19,19,28,0.92);backdrop-filter:blur(10px);
-  border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;
-  font-size:0.72rem;color:var(--dim);padding:7px 0}
+/* ── STATUS BAR ── */
+.statusbar{display:none}
 .statusbar .sb-inner{max-width:1120px;margin:0 auto;padding:0 32px;
   display:flex;justify-content:space-between;align-items:center;gap:20px}
 .statusbar .sb-left{display:flex;gap:22px;align-items:center}
@@ -178,7 +173,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .btn-ghost:hover{border-color:var(--lav);transform:translateY(-4px)}
 
 /* ── TERMINAL CARD (hero visual) ── */
-.term{margin-top:60px;background:#0e0e16;border:1px solid var(--line);
+.term{display:none;margin-top:60px;background:#0e0e16;border:1px solid var(--line);
   border-radius:14px;overflow:hidden;max-width:560px;
   box-shadow:0 24px 60px rgba(0,0,0,0.5);font-family:'JetBrains Mono',monospace}
 .term-head{display:flex;align-items:center;gap:8px;padding:11px 16px;
@@ -451,7 +446,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 <!-- HERO -->
 <header class="hero" id="top">
   <div class="wrap hero-inner">
-    <div class="pill fade-up"><span class="dot"></span> Disponible para nuevos retos · Madrid, España</div>
+    <div class="pill fade-up"><span class="dot"></span> Disponible para nuevos proyectos · Madrid, España</div>
     <h1 class="fade-up">
       <span class="glitch decrypt" data-text="Ingeniería de detección." data-final="Ingeniería de detección.">Ingeniería de detección.</span><br>
       <span class="grad glitch decrypt" data-text="Arquitectura defensiva." data-final="Arquitectura defensiva.">Arquitectura defensiva.</span>
@@ -459,18 +454,18 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
     <div class="role fade-up" id="roleType"><span class="caret"></span></div>
     <p class="lead fade-up">
       Consultor de ciberseguridad especializado en SOC/SIEM, detection engineering,
-      incident response y arquitectura de seguridad en entornos enterprise. Uso el
-      conocimiento ofensivo para mejorar la cobertura, el triage y la resiliencia defensiva.
+      incident response y arquitectura de seguridad en entornos corporativos.
+      Trabajo con foco práctico: mejor cobertura, menos ruido operativo y decisiones claras.
     </p>
     <div class="cta-row fade-up">
       <a href="#writeups" class="btn btn-primary">Ver writeups CTF →</a>
       <a href="#contact" class="btn btn-ghost">Contactar</a>
     </div>
     <div class="signal-grid fade-up">
-      <div class="signal"><span class="sig-k">SIEM_CORE</span><span class="sig-v">Splunk / SPL</span></div>
-      <div class="signal"><span class="sig-k">IR_STACK</span><span class="sig-v">Cortex XDR</span></div>
-      <div class="signal"><span class="sig-k">EDGE_SECURITY</span><span class="sig-v">SASE / ZTNA</span></div>
-      <div class="signal"><span class="sig-k">TELEMETRY</span><span class="sig-v">AWS / NGFW</span></div>
+      <div class="signal"><span class="sig-k">SIEM & Detección</span><span class="sig-v">Splunk / SPL</span></div>
+      <div class="signal"><span class="sig-k">Respuesta a incidentes</span><span class="sig-v">Cortex XDR</span></div>
+      <div class="signal"><span class="sig-k">Seguridad de acceso</span><span class="sig-v">SASE / ZTNA</span></div>
+      <div class="signal"><span class="sig-k">Infraestructura</span><span class="sig-v">AWS / NGFW</span></div>
     </div>
     <div class="term fade-up">
       <div class="term-head">
@@ -706,7 +701,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
     <div class="wu-controls fade-up" id="wuFilters"></div>
     <div class="wu-grid" id="wuGrid"></div>
     <div class="wu-note fade-up">
-      &gt; Para añadir un writeup: edita <code>writeups.json</code> y añade una entrada. La web lo carga automáticamente.
+      &gt; Los writeups publicados aquí mantienen enfoque técnico y formato profesional, evitando spoilers cuando la plataforma lo requiere.
     </div>
   </div>
 </section>
@@ -727,7 +722,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
 </section>
 
 <footer>
-  <div class="wrap">&gt; designed &amp; built by Oswaldo Vargas Rodríguez · <span id="year"></span></div>
+  <div class="wrap">Diseñado y desarrollado por Oswaldo Vargas Rodríguez · <span id="year"></span></div>
 </footer>
 
 <!-- STATUS BAR -->
@@ -750,8 +745,8 @@ const i18n={
     switchLabel:'EN',
     title:'Oswaldo Vargas Rodríguez — Cybersecurity Consultant & Detection Engineer',
     description:'Portfolio de Oswaldo Vargas Rodríguez — SOC/SIEM, Detection Engineering, Incident Response, arquitectura de seguridad y automatización.',
-    role:'> Cybersecurity Consultant · SOC/SIEM · Detection Engineering · Incident Response',
-    contactType:'$ ./contact --connect :: detection_eng · soc_siem · incident_response · security_architecture',
+    role:'Consultor de ciberseguridad · SOC/SIEM · Detection Engineering · Incident Response',
+    contactType:'Hablemos de SOC, detección, respuesta a incidentes y arquitectura de seguridad.',
     selectors:{
       '.nav-links li:nth-child(1) a':'Sobre mí',
       '.nav-links li:nth-child(2) a':'Capacidades',
@@ -761,10 +756,10 @@ const i18n={
       '.nav-links li:nth-child(6) a':'Writeups',
       '.nav-links li:nth-child(7) a':'Contacto',
       '.brand-role':'detection://engineer',
-      '.pill':'<span class="dot"></span> Disponible para nuevos retos · Madrid, España',
+      '.pill':'<span class="dot"></span> Disponible para nuevos proyectos · Madrid, España',
       '.hero h1 .decrypt:nth-child(1)':'Ingeniería de detección.',
       '.hero h1 .decrypt:nth-child(3)':'Arquitectura defensiva.',
-      '.hero .lead':'Consultor de ciberseguridad especializado en SOC/SIEM, detection engineering, incident response y arquitectura de seguridad en entornos enterprise. Uso el conocimiento ofensivo para mejorar la cobertura, el triage y la resiliencia defensiva.',
+      '.hero .lead':'Consultor de ciberseguridad especializado en SOC/SIEM, detection engineering, incident response y arquitectura de seguridad en entornos corporativos. Trabajo con foco práctico: mejor cobertura, menos ruido operativo y decisiones claras.',
       '.cta-row .btn-primary':'Ver writeups CTF →',
       '.cta-row .btn-ghost':'Contactar',
       '#about .sec-tag':'01 — sobre mí',
@@ -818,7 +813,7 @@ const i18n={
       '#writeups .sec-tag':'06 — laboratorio',
       '#writeups h2':'Writeups CTF',
       '#writeups .sec-head p':'Resoluciones documentadas de retos de Hack The Box, TryHackMe y competiciones CTF.',
-      '.wu-note':'&gt; Para añadir un writeup: edita <code>writeups.json</code> y añade una entrada. La web lo carga automáticamente.',
+      '.wu-note':'&gt; Los writeups publicados aquí mantienen enfoque técnico y formato profesional, evitando spoilers cuando la plataforma lo requiere.',
       '#contact .sec-tag':'07 — contacto',
       '#contact .big':'Trabajemos <span class="grad">juntos</span>'
     },
@@ -829,8 +824,8 @@ const i18n={
     switchLabel:'ES',
     title:'Oswaldo Vargas Rodríguez — Cybersecurity Consultant & Detection Engineer',
     description:'Portfolio of Oswaldo Vargas Rodríguez — SOC/SIEM, Detection Engineering, Incident Response, security architecture, and automation.',
-    role:'> Cybersecurity Consultant · SOC/SIEM · Detection Engineering · Incident Response',
-    contactType:'$ ./contact --connect :: detection_eng · soc_siem · incident_response · security_architecture',
+    role:'Cybersecurity Consultant · SOC/SIEM · Detection Engineering · Incident Response',
+    contactType:'Open to discuss SOC, detection engineering, incident response, and security architecture.',
     selectors:{
       '.nav-links li:nth-child(1) a':'About',
       '.nav-links li:nth-child(2) a':'Capabilities',
@@ -840,10 +835,10 @@ const i18n={
       '.nav-links li:nth-child(6) a':'Writeups',
       '.nav-links li:nth-child(7) a':'Contact',
       '.brand-role':'detection://engineer',
-      '.pill':'<span class="dot"></span> Available for new challenges · Madrid, Spain',
+      '.pill':'<span class="dot"></span> Available for new projects · Madrid, Spain',
       '.hero h1 .decrypt:nth-child(1)':'Detection engineering.',
       '.hero h1 .decrypt:nth-child(3)':'Defensive architecture.',
-      '.hero .lead':'Cybersecurity consultant specialized in SOC/SIEM, detection engineering, incident response, and security architecture in enterprise environments. I use offensive knowledge to improve coverage, triage, and defensive resilience.',
+      '.hero .lead':'Cybersecurity consultant specialized in SOC/SIEM, detection engineering, incident response, and security architecture in enterprise environments. I focus on practical outcomes: stronger coverage, lower alert noise, and clearer decisions.',
       '.cta-row .btn-primary':'View CTF writeups →',
       '.cta-row .btn-ghost':'Contact',
       '#about .sec-tag':'01 — about',
@@ -897,7 +892,7 @@ const i18n={
       '#writeups .sec-tag':'06 — lab',
       '#writeups h2':'CTF Writeups',
       '#writeups .sec-head p':'Documented walkthroughs for Hack The Box, TryHackMe, and CTF challenges.',
-      '.wu-note':'&gt; To add a writeup: edit <code>writeups.json</code> and add an entry. The site loads it automatically.',
+      '.wu-note':'&gt; Writeups published here follow a professional technical format and stay spoiler-free when platform policy requires it.',
       '#contact .sec-tag':'07 — contact',
       '#contact .big':'Let’s work <span class="grad">together</span>'
     },
@@ -923,7 +918,7 @@ function applyLanguage(){
   const navToggle=document.getElementById('navToggle');
   if(navToggle)navToggle.setAttribute('aria-label',currentLang==='es'?'Menú':'Menu');
   const footer=document.querySelector('footer .wrap');
-  if(footer)footer.innerHTML=(currentLang==='es'?'&gt; designed &amp; built by Oswaldo Vargas Rodríguez · ':'&gt; designed &amp; built by Oswaldo Vargas Rodríguez · ')+'<span id="year"></span>';
+  if(footer)footer.innerHTML=(currentLang==='es'?'Diseñado y desarrollado por Oswaldo Vargas Rodríguez · ':'Designed and built by Oswaldo Vargas Rodríguez · ')+'<span id="year"></span>';
   const year=document.getElementById('year');if(year)year.textContent=new Date().getFullYear();
   if(window.allWriteups&&window.allWriteups.length){buildFilters();renderWriteups(window.allWriteups);}
 }
