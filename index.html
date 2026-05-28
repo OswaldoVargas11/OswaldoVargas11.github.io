@@ -143,6 +143,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 100px}
 .hero-inner{width:100%}
+.hero .wrap{max-width:1400px}
 .pill{display:inline-flex;align-items:center;gap:9px;
   font-family:'JetBrains Mono',monospace;font-size:0.76rem;
   background:var(--panel);border:1px solid var(--line);
@@ -192,7 +193,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 
 /* ── TERMINAL CARD (hero visual) ── */
 .term{margin-top:60px;background:#090c16;border:1px solid var(--line);
-  border-radius:14px;overflow:hidden;max-width:560px;
+  border-radius:14px;overflow:hidden;max-width:none;width:100%;
   box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 30px rgba(49,255,210,.12);font-family:'JetBrains Mono',monospace;
   position:relative}
 .term::before{content:'';position:absolute;inset:0;
@@ -208,6 +209,7 @@ nav.scrolled{border-bottom-color:var(--line)}
 .term-body .pr{color:var(--lav)}
 .term-body .ok{color:var(--mint)}
 .term-body .wn{color:var(--peach)}
+.term-body .er{color:#ff6f86}
 .term-body .out{color:var(--text)}
 
 /* ── SECTION HEAD ── */
@@ -1084,26 +1086,67 @@ setInterval(()=>{
   const term=document.getElementById('termBody');
   if(!term)return;
   const lines=[
-    '$ check-coverage --mitre --last 7d',
-    '[ok] ATT&CK coverage uplift +18%',
-    '$ triage --queue high --sla 15m',
-    '[ok] MTTD improving on credential abuse',
-    '$ run playbook --scenario phishing-lateral',
-    '[ok] Containment workflow validated'
+    {type:'cmd',text:'nmap -sC -sV -Pn portfolio.target'},
+    {type:'warn',text:'PORT      STATE SERVICE      VERSION'},
+    {type:'out',text:'22/tcp    open  ssh          OpenSSH 9.7p1'},
+    {type:'out',text:'80/tcp    open  http         portfolio-gateway 2.4'},
+    {type:'out',text:'443/tcp   open  https        portfolio-gateway 2.4'},
+    {type:'warn',text:'[*] potential misconfig detected on /api/profile/export'},
+    {type:'cmd',text:'python3 exploit_profile_dump.py --target portfolio.target --cve CVE-2026-OVR-1337'},
+    {type:'warn',text:'[*] connecting to debug endpoint...'},
+    {type:'err',text:'[err] timeout on /api/profile/export (attempt 1/3)'},
+    {type:'warn',text:'[*] retrying with fallback header X-Debug: true'},
+    {type:'ok',text:'[ok] endpoint responded :: status 200'},
+    {type:'err',text:'[err] invalid token signature :: regenerating payload'},
+    {type:'ok',text:'[ok] access token forged :: scope=profile.read'},
+    {type:'ok',text:'[ok] dump chunk #1 => name: Oswaldo Vargas Rodriguez'},
+    {type:'ok',text:'[ok] dump chunk #2 => role: Cybersecurity Consultant'},
+    {type:'ok',text:'[ok] dump chunk #3 => focus: SOC/SIEM · Detection Engineering · Incident Response'},
+    {type:'ok',text:'[ok] dump chunk #4 => location: Madrid, ES'},
+    {type:'ok',text:'[ok] dump chunk #5 => stack: Splunk | Cortex XDR | AWS | ZTNA'},
+    {type:'cmd',text:'cat findings.txt'},
+    {type:'out',text:'Impact: profile disclosure via exposed debug route.'},
+    {type:'out',text:'Recommendation: disable debug export and rotate API secrets.'},
+    {type:'ok',text:'[ok] simulation completed :: blue-team lessons extracted'}
   ];
-  let i=0;
-  setInterval(()=>{
-    const row=document.createElement('div');
-    row.className='ln';
-    row.style.opacity='1';
-    row.innerHTML=lines[i].startsWith('$')
-      ? `<span class="pr">$</span> ${lines[i].slice(1)}`
-      : `<span class="ok">[ok]</span> <span class="out">${lines[i].replace('[ok] ','')}</span>`;
-    term.insertBefore(row,term.lastElementChild);
+
+  function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+  function trimLines(){
     const dynamic=[...term.querySelectorAll('.ln')];
-    if(dynamic.length>12){dynamic[0].remove();}
-    i=(i+1)%lines.length;
-  },2600);
+    if(dynamic.length>22){dynamic[0].remove();}
+  }
+  async function typeHtml(el,html){
+    el.innerHTML='';
+    for(let j=0;j<html.length;j++){
+      el.innerHTML=html.slice(0,j+1);
+      await sleep(8+Math.random()*18);
+    }
+  }
+  function toHtml(line){
+    if(line.type==='cmd') return `<span class="pr">$</span> ${line.text}`;
+    if(line.type==='warn') return `<span class="wn">[*]</span> <span class="out">${line.text.replace('[*] ','')}</span>`;
+    if(line.type==='ok') return `<span class="ok">[ok]</span> <span class="out">${line.text.replace('[ok] ','')}</span>`;
+    if(line.type==='err') return `<span class="er">[err]</span> <span class="out">${line.text.replace('[err] ','')}</span>`;
+    return `<span class="out">${line.text}</span>`;
+  }
+
+  async function run(){
+    let i=0;
+    while(true){
+      const line=lines[i];
+      const row=document.createElement('div');
+      row.className='ln';
+      row.style.opacity='1';
+      term.insertBefore(row,term.lastElementChild);
+      await typeHtml(row,toHtml(line));
+      trimLines();
+      await sleep(line.type==='cmd'?550:380);
+      i=(i+1)%lines.length;
+      if(i===0){await sleep(1100);}
+    }
+  }
+
+  run();
 })();
 
 /* ── SCROLL REVEAL ── */
