@@ -10,19 +10,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Schibsted+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0f1118;
-  --bg-soft:#171b25;
-  --panel:#1b2130;
-  --panel-hi:#262638;
-  --line:#2e2e42;
+  --bg:#0a0b12;
+  --bg-soft:#111525;
+  --panel:#141a2b;
+  --panel-hi:#1d2540;
+  --line:#2a3355;
   --text:#f0eef6;
-  --muted:#a8a4be;
-  --dim:#6f6b87;
-  --lav:#c5b8ff;
-  --mint:#9be8d8;
+  --muted:#aab4d6;
+  --dim:#7380a8;
+  --lav:#a671ff;
+  --mint:#31ffd2;
   --peach:#ffc9a8;
-  --rose:#f6b8d0;
-  --sky:#a8d4ff;
+  --rose:#ff5fcf;
+  --sky:#4db1ff;
+  --neon:#00ffe1;
   --r:18px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -31,11 +32,20 @@ body{
   background:var(--bg);color:var(--text);
   font-family:'Schibsted Grotesk',sans-serif;line-height:1.6;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  position:relative;
+}
+body::before{
+  content:'';position:fixed;left:var(--mx,50%);top:var(--my,50%);
+  width:600px;height:600px;transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(49,255,210,0.11),transparent 60%);
+  pointer-events:none;z-index:-1;filter:blur(12px);
 }
 ::selection{background:var(--lav);color:#13131c}
 
 /* ── BOOT SCREEN ── */
-#boot{display:none}
+#boot{position:fixed;inset:0;z-index:10000;background:rgba(10,11,18,0.92);
+  display:flex;align-items:center;justify-content:center;
+  transition:opacity .7s ease,visibility .7s;backdrop-filter:blur(3px)}
 #boot.done{opacity:0;visibility:hidden}
 .boot-term{width:min(560px,86vw);font-family:'JetBrains Mono',monospace;
   font-size:0.86rem;line-height:1.9}
@@ -49,7 +59,7 @@ body{
   background:linear-gradient(90deg,var(--lav),var(--mint))}
 
 /* ── MATRIX RAIN CANVAS ── */
-#matrix{display:none}
+#matrix{position:fixed;inset:0;z-index:-3;opacity:0.14;pointer-events:none;mix-blend-mode:screen}
 
 /* ── BACKGROUND ── */
 .bg-mesh{position:fixed;inset:0;z-index:-2;
@@ -62,7 +72,7 @@ body{
     rgba(255,255,255,0.012) 3px,rgba(255,255,255,0.012) 4px)}
 .bg-noise{position:fixed;inset:0;z-index:-1;opacity:0.025;pointer-events:none;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
-.bg-circuit{display:none;
+.bg-circuit{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:0.12;
   background:
     linear-gradient(90deg,transparent 0 47%,rgba(155,232,216,0.35) 48% 49%,transparent 50%),
     linear-gradient(0deg,transparent 0 47%,rgba(197,184,255,0.25) 48% 49%,transparent 50%);
@@ -106,11 +116,19 @@ nav.scrolled{border-bottom-color:var(--line)}
   background:var(--panel);border:1px solid var(--line);color:var(--text);
   padding:8px 12px;border-radius:9px;cursor:pointer;transition:all .25s}
 .lang-switch:hover{border-color:var(--lav);transform:translateY(-2px)}
+.fx-switch{font-family:'JetBrains Mono',monospace;font-size:0.76rem;
+  background:linear-gradient(135deg,rgba(166,113,255,.22),rgba(0,255,225,.18));
+  border:1px solid rgba(49,255,210,.45);color:var(--text);
+  padding:8px 12px;border-radius:9px;cursor:pointer;transition:all .25s}
+.fx-switch:hover{transform:translateY(-2px);box-shadow:0 0 20px rgba(49,255,210,.22)}
 .nav-toggle{display:none;background:none;border:none;color:var(--text);
   font-size:1.6rem;cursor:pointer}
 
 /* ── STATUS BAR ── */
-.statusbar{display:none}
+.statusbar{position:fixed;bottom:0;left:0;right:0;z-index:90;
+  background:rgba(10,11,18,0.78);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;
+  font-size:0.72rem;color:var(--dim);padding:7px 0}
 .statusbar .sb-inner{max-width:1120px;margin:0 auto;padding:0 32px;
   display:flex;justify-content:space-between;align-items:center;gap:20px}
 .statusbar .sb-left{display:flex;gap:22px;align-items:center}
@@ -173,9 +191,13 @@ nav.scrolled{border-bottom-color:var(--line)}
 .btn-ghost:hover{border-color:var(--lav);transform:translateY(-4px)}
 
 /* ── TERMINAL CARD (hero visual) ── */
-.term{display:none;margin-top:60px;background:#0e0e16;border:1px solid var(--line);
+.term{margin-top:60px;background:#090c16;border:1px solid var(--line);
   border-radius:14px;overflow:hidden;max-width:560px;
-  box-shadow:0 24px 60px rgba(0,0,0,0.5);font-family:'JetBrains Mono',monospace}
+  box-shadow:0 24px 60px rgba(0,0,0,0.5),0 0 30px rgba(49,255,210,.12);font-family:'JetBrains Mono',monospace;
+  position:relative}
+.term::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(145deg,transparent 55%,rgba(166,113,255,.11));
+  pointer-events:none}
 .term-head{display:flex;align-items:center;gap:8px;padding:11px 16px;
   background:var(--panel);border-bottom:1px solid var(--line)}
 .term-dot{width:11px;height:11px;border-radius:50%}
@@ -363,6 +385,21 @@ nav.scrolled{border-bottom-color:var(--line)}
   border:1px solid var(--line);padding:15px 20px;border-radius:12px}
 .wu-note code{color:var(--lav)}
 
+.stat,.skill-card,.edu-card,.wu-card,.cert,.id-card{
+  backdrop-filter:blur(2px);
+}
+.stat:hover,.skill-card:hover,.edu-card:hover,.wu-card:hover,.cert:hover,.id-card:hover{
+  box-shadow:0 18px 42px rgba(0,0,0,.42),0 0 28px rgba(166,113,255,.14);
+}
+
+body.fx-minimal #matrix,
+body.fx-minimal .bg-circuit,
+body.fx-minimal .bg-scan,
+body.fx-minimal .bg-noise{
+  opacity:.02 !important;
+}
+body.fx-minimal #matrix{display:none}
+
 /* ── CONTACT ── */
 .contact{text-align:center}
 .contact .big{font-family:'Clash Display',sans-serif;font-weight:600;
@@ -437,6 +474,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
       <li><a href="#contact">Contacto</a></li>
     </ul>
     <div class="nav-actions">
+      <button class="fx-switch" id="fxSwitch" type="button" aria-label="Alternar efectos visuales">FX</button>
       <button class="lang-switch" id="langSwitch" type="button" aria-label="Switch language">EN</button>
       <button class="nav-toggle" id="navToggle" aria-label="Menú">≡</button>
     </div>
@@ -731,7 +769,7 @@ footer{border-top:1px solid var(--line);padding:34px 0 60px;text-align:center;
     <div class="sb-left">
       <div class="sb-item"><span class="sb-led"></span> SYSTEM <span class="sb-val">ONLINE</span></div>
       <div class="sb-item">SESSION <span class="sb-val" id="sbTime">--:--:--</span></div>
-      <div class="sb-item">MODE <span class="sb-val">DETECTION→RESILIENCE</span></div>
+      <div class="sb-item">MODE <span class="sb-val" id="sbMode">CYBERPUNK_ACTIVE</span></div>
       <div class="sb-item">LOC <span class="sb-val">MADRID·ES</span></div>
     </div>
     <div class="sb-right" id="sbHash">0x00000000</div>
@@ -1018,6 +1056,20 @@ document.getElementById('langSwitch').addEventListener('click',()=>{
   applyLanguage();
 });
 document.getElementById('year').textContent=new Date().getFullYear();
+document.addEventListener('pointermove',(e)=>{
+  document.body.style.setProperty('--mx',e.clientX+'px');
+  document.body.style.setProperty('--my',e.clientY+'px');
+});
+const fxSwitch=document.getElementById('fxSwitch');
+if(fxSwitch){
+  fxSwitch.addEventListener('click',()=>{
+    document.body.classList.toggle('fx-minimal');
+    const active=!document.body.classList.contains('fx-minimal');
+    const mode=document.getElementById('sbMode');
+    if(mode)mode.textContent=active?'CYBERPUNK_ACTIVE':'FOCUS_MODE';
+    fxSwitch.textContent=active?'FX':'ECO';
+  });
+}
 
 /* ── STATUS BAR clock + hash ── */
 function pad(n){return String(n).padStart(2,'0');}
@@ -1026,6 +1078,33 @@ setInterval(()=>{
   document.getElementById('sbTime').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds());
   document.getElementById('sbHash').textContent='0x'+Math.floor(Math.random()*0xffffffff).toString(16).padStart(8,'0').toUpperCase();
 },1000);
+
+/* ── TERMINAL live ticker ── */
+(function(){
+  const term=document.getElementById('termBody');
+  if(!term)return;
+  const lines=[
+    '$ check-coverage --mitre --last 7d',
+    '[ok] ATT&CK coverage uplift +18%',
+    '$ triage --queue high --sla 15m',
+    '[ok] MTTD improving on credential abuse',
+    '$ run playbook --scenario phishing-lateral',
+    '[ok] Containment workflow validated'
+  ];
+  let i=0;
+  setInterval(()=>{
+    const row=document.createElement('div');
+    row.className='ln';
+    row.style.opacity='1';
+    row.innerHTML=lines[i].startsWith('$')
+      ? `<span class="pr">$</span> ${lines[i].slice(1)}`
+      : `<span class="ok">[ok]</span> <span class="out">${lines[i].replace('[ok] ','')}</span>`;
+    term.insertBefore(row,term.lastElementChild);
+    const dynamic=[...term.querySelectorAll('.ln')];
+    if(dynamic.length>12){dynamic[0].remove();}
+    i=(i+1)%lines.length;
+  },2600);
+})();
 
 /* ── SCROLL REVEAL ── */
 const io=new IntersectionObserver(es=>{es.forEach(e=>{
